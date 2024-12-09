@@ -145,7 +145,7 @@ with tab2:
             st.write("Vrstice za pregled:")
 
             # Priprava možnosti za spustni seznam
-            dropdown_options = ["neznano", ""] + words
+            dropdown_options = ["neznano"] + words
             
             # Dodajanje spustnega seznama za "najboljše ujemanje"
             for index, row in df_to_check.iterrows():
