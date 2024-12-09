@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import Levenshtein
+import time
 
 def validate_words(input_string):
     """Preveri, da je vnos seznam besed, ločenih z vejicami, ki dovoljuje posebne znake in številke."""
@@ -49,40 +50,89 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(["1. Vnos podatkov", "2. Ročna klasifika
 # Tab 1: Input Data
 with tab1:
     st.header("1. Vnos podatkov")
-    
-    # Vnos za besede
+
+    # File uploader
+    uploaded_file = st.file_uploader("Naloži CSV", type="csv")
+
+    # Input for column name
+    column_name = st.text_input(
+        "Vnesite ime stolpca za primerjavo:",
+        placeholder="npr., Q1a_1_other"
+    )
+
+    if uploaded_file and column_name:
+        try:
+            # Read the file into a pandas DataFrame
+            uploaded_file.seek(0)  # Reset file pointer before reading
+            df = pd.read_csv(uploaded_file)
+
+            if column_name in df.columns:
+                # Extract unique words
+                unique_words = df[column_name].dropna().unique()
+                unique_words = [str(word).strip() for word in unique_words]
+                unique_words_text = ", ".join(unique_words)
+
+                # Display unique words
+                st.write("Unikatne besede v izbranem stolpcu:")
+                st.text_area(
+                    "Unikatne besede (kopirajte, če je potrebno):",
+                    value=unique_words_text,
+                    height=150,
+                    label_visibility="collapsed"
+                )
+
+                # Recommended words
+                recommended_words = "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, hot telekom, hofer telekom, t-2, mobitel, izi, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do"
+                st.write("Priporočen seznam besed:")
+                st.text_area(
+                    "Priporočene besede:",
+                    value=recommended_words,
+                    height=150,
+                    label_visibility="collapsed"
+                )
+
+            else:
+                st.error(f"Stolpec '{column_name}' ni najden v naloženi CSV datoteki.")
+        except pd.errors.EmptyDataError:
+            st.error("CSV datoteka je prazna ali ima napačno obliko.")
+        except Exception as e:
+            st.error(f"Prišlo je do napake pri branju datoteke: {e}")
+
+    st.subheader("Seznam besed za klasifikacijo:")
     word_input = st.text_area(
         "Vpiši seznam besed, ločenih z vejicami, za klasifikacijo:",
-        # value="telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, hot telekom, hofer telekom, t-2, mobitel, izi, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do",
         placeholder="npr., telemach, telekom, a1, izi, hot"
     )
-    
+
     if word_input:
-        words = validate_words(word_input)
+        with st.spinner('Preverjam besede...'):  
+            words = validate_words(word_input)
         if not words:
             st.error("Neveljaven vnos. Prosimo, vnesite seznam besed, ločenih z vejicami (npr., telemach, telekom).")
         else:
             st.success(f"Veljaven vnos. Za klasifikacijo uporabljenih {len(words)} besed.")
 
-    # Vnos za stolpec
-    column_name = st.text_input(
-        "Vnesite ime stolpca za primerjavo:",
-        # value="Q1a_1_other",
-        placeholder="npr., Q1a_1_other"
-    )
+    # Process CSV if everything is valid
+    if uploaded_file and word_input and column_name:
+        try:
+            uploaded_file.seek(0)  # Reset file pointer before processing again
 
-    # Nalagalnik datotek
-    uploaded_file = st.file_uploader("Naloži CSV", type="csv")
+            with st.spinner('Klasificiram podatke...'):
+                processed_df = process_csv(uploaded_file, column_name, words)
 
-    # Prikaži obdelane podatke
-    if uploaded_file and words and column_name:
-        processed_df = process_csv(uploaded_file, column_name, words)
-        if processed_df is not None:
-            st.session_state['processed_df'] = processed_df  # Save DataFrame to session state
-            st.write("Obdelani podatki:")
-            st.dataframe(processed_df)
-        else:
-            st.error("Napaka pri obdelavi CSV datoteke.")
+            
+
+            
+            if processed_df is not None:
+                st.session_state['processed_df'] = processed_df
+                st.success("CSV datoteka uspešno obdelana!")
+                st.write("Obdelani podatki:")
+                st.dataframe(processed_df)
+            else:
+                st.error("Napaka pri obdelavi CSV datoteke.")
+        except Exception as e:
+            st.error(f"Prišlo je do napake pri obdelavi podatkov: {e}")
+
 
 # Tab 2: Manual Classification
 with tab2:
