@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import Levenshtein
-import time
+import csv
 
 def validate_words(input_string):
     """Preveri, da je vnos seznam besed, ločenih z vejicami, ki dovoljuje posebne znake in številke."""
@@ -11,9 +11,9 @@ def validate_words(input_string):
     else:
         return None
 
-def process_csv(file, column, words):
+def process_csv(file, column, words, delimiter=","):
     """Obdelaj CSV datoteko in izračunaj najboljše Levenshteinovo ujemanje za vsako besedo."""
-    df = pd.read_csv(file)
+    df = pd.read_csv(file, delimiter=delimiter)
     
     # Preveri, ali stolpec obstaja
     if column not in df.columns:
@@ -62,9 +62,14 @@ with tab1:
 
     if uploaded_file and column_name:
         try:
-            # Read the file into a pandas DataFrame
-            uploaded_file.seek(0)  # Reset file pointer before reading
-            df = pd.read_csv(uploaded_file)
+            # Auto-detect delimiter
+            uploaded_file.seek(0)  # Reset file pointer
+            sample = uploaded_file.read(1024).decode('utf-8')  # Read a small sample of the file
+            uploaded_file.seek(0)  # Reset file pointer again
+            detected_delimiter = csv.Sniffer().sniff(sample).delimiter  # Detect delimiter
+
+            # Read the file into a pandas DataFrame using the detected delimiter
+            df = pd.read_csv(uploaded_file, delimiter=detected_delimiter)
 
             if column_name in df.columns:
                 # Extract unique words
@@ -90,11 +95,12 @@ with tab1:
                     height=150,
                     label_visibility="collapsed"
                 )
-
             else:
                 st.error(f"Stolpec '{column_name}' ni najden v naloženi CSV datoteki.")
         except pd.errors.EmptyDataError:
             st.error("CSV datoteka je prazna ali ima napačno obliko.")
+        except csv.Error:
+            st.error("Ni mogoče zaznati ločila v datoteki. Preverite, ali je datoteka pravilno oblikovana.")
         except Exception as e:
             st.error(f"Prišlo je do napake pri branju datoteke: {e}")
 
@@ -118,11 +124,8 @@ with tab1:
             uploaded_file.seek(0)  # Reset file pointer before processing again
 
             with st.spinner('Klasificiram podatke...'):
-                processed_df = process_csv(uploaded_file, column_name, words)
-
-            
-
-            
+                processed_df = process_csv(uploaded_file, column_name, words, delimiter=detected_delimiter)
+                
             if processed_df is not None:
                 st.session_state['processed_df'] = processed_df
                 st.success("CSV datoteka uspešno obdelana!")
@@ -132,7 +135,6 @@ with tab1:
                 st.error("Napaka pri obdelavi CSV datoteke.")
         except Exception as e:
             st.error(f"Prišlo je do napake pri obdelavi podatkov: {e}")
-
 
 # Tab 2: Manual Classification
 with tab2:
