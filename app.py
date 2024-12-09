@@ -53,7 +53,7 @@ with tab1:
     # Vnos za besede
     word_input = st.text_area(
         "Vpiši seznam besed, ločenih z vejicami, za klasifikacijo:",
-        value="telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, hot telekom, hofer telekom, t-2, mobitel, izi, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do",
+        # value="telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, hot telekom, hofer telekom, t-2, mobitel, izi, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do",
         placeholder="npr., telemach, telekom, a1, izi, hot"
     )
     
@@ -67,7 +67,7 @@ with tab1:
     # Vnos za stolpec
     column_name = st.text_input(
         "Vnesite ime stolpca za primerjavo:",
-        value="Q1a_1_other",
+        # value="Q1a_1_other",
         placeholder="npr., Q1a_1_other"
     )
 
