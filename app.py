@@ -155,7 +155,7 @@ with tab2:
                     options=dropdown_options,
                     index=dropdown_options.index(row['najboljše_ujemanje']) 
                     if row['najboljše_ujemanje'] in dropdown_options 
-                    else dropdown_options.index("")
+                    else dropdown_options.index("neznano")
                 )
             
             # Shrani urejen DataFrame
