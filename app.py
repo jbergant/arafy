@@ -141,8 +141,14 @@ with tab2:
     st.header("2. Ročna klasifikacija")
     
     if 'processed_df' in st.session_state:
-        df_to_check = st.session_state['processed_df'][st.session_state['processed_df']['za_pregled']]
-        
+        # Ensure 'za_pregled' column has no NaN values
+        processed_df = st.session_state['processed_df']
+        if 'za_pregled' in processed_df.columns:
+            processed_df['za_pregled'] = processed_df['za_pregled'].fillna(False)
+
+        # Filter rows for manual classification
+        df_to_check = processed_df[processed_df['za_pregled']]
+
         if not df_to_check.empty:
             st.write("Vrstice za pregled:")
 
@@ -162,7 +168,6 @@ with tab2:
             
             # Shrani urejen DataFrame
             st.session_state['edited_df'] = df_to_check
-
         else:
             st.success("Ni vrstic za pregled!")
     else:
