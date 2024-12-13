@@ -217,40 +217,6 @@ with tab2:
                     key="selectbox_updated_" + str(updated_selected_column),
                     use_container_width=True
                 )
-
-                st.dataframe(editable_df)
-            # if not editable_df.equals(original_df):
-            #     # Update session_state only if changes are detected
-            #     st.write(f"Kopiram v session in original df")
-            #     st.session_state['processed_dfs'][selected_index] = copy.deepcopy(editable_df)
-            #     original_df = copy.deepcopy(editable_df)
-
-            #     st.write(f"Posodobljeni podatki za stolpec '{updated_selected_column}':")
-            #     st.dataframe(editable_df)
-
-
-
-            #     editable_df_placeholder.empty()
-            #     st.toast(f"Posodobljeni podatki za stolpec '{updated_selected_column}' so shranjeni.")
-
-            #     with editable_df_placeholder.container():
-
-            #         df_to_edit = copy.deepcopy(st.session_state['processed_dfs'][selected_index])
-            #         df_to_edit = df_to_edit.sort_values(by="za_pregled", ascending=False)
-            #         st.write(f"Obdelani podatki za stolpec  xxxxx '{updated_selected_column}':")
-
-                    
-            #         editable_df = st.data_editor(
-            #             df_to_edit,
-            #             column_config={
-            #                 "za_pregled": st.column_config.CheckboxColumn("Za pregled")
-            #             },
-            #             num_rows="dynamic",
-            #             use_container_width=True
-            #         )
-            
-
-
     else:
         st.warning("Najprej naloži in obdelaj podatke v zavihku '1. Vnos podatkov'.")
 
