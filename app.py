@@ -114,7 +114,7 @@ with tab2:
             # Input for column name
             column_name = st.text_input(
                 "Vnesite ime stolpca ločeno z vejico:",
-                value="Q1a_1_other,Q1a_2_other,Q1a_3_other",
+                # value="Q1a_1_other,Q1a_2_other,Q1a_3_other",
                 placeholder="npr., Q1a_1_other, Q1a_2_other, Q1a_3_other"
             )
             recognised_column_names = []
@@ -175,7 +175,7 @@ with tab2:
                 st.subheader("Seznam besed za klasifikacijo:")
                 word_input = st.text_area(
                     "Vpiši seznam besed, ločenih z vejicami, za klasifikacijo:",
-                    value=recommended_words,
+                    # value=recommended_words,
                     placeholder="npr., telemach, telekom, a1, izi, hot"
                 )
 
