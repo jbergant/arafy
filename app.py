@@ -52,7 +52,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7  = st.tabs([ "1. Nastavitve", "2. Vnos 
 
 with tab1:
     use_cases = {
-        "Telekomunikacije": {
+        "Mobilni ponudniki": {
             "mergers": {
                 "a1 slovenija": "a1",
                 "hofer": "hot",
@@ -79,16 +79,54 @@ with tab1:
                 "hot": "6",
                 "re:do": "7",
             },
+            "columns": "Q1a_1_other,Q1a_2_other,Q1a_3_other",
+            "recomenders":  "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, hot telekom, hofer telekom, t-2, mobitel, izi, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do"
         },
+        "Fiksni ponudniki": {
+            "mergers": {
+                "a1 slovenija": "a1",
+                "a2": "a1",
+                "hofer": "hot",
+                "hot mobil": "hot",
+                "hot telekom": "hot",
+                "hofer telekom": "hot",
+                "telekom slovenije": "telekom",
+                "t-2": "t2",
+            },
+            "renamers": {
+                "mobitel": "telekom",
+                "simobil": "a1",
+                "tuš mobil": "telemach",
+                "tuš": "telemach",
+                "izi mobil": "a1",
+                "siol": "telekom",
+                "amis": "a1",
+                "ario": "telemach",
+                "neo": "telekom",
+            },
+            "identificators": {
+                "telekom": "1",
+                "a1": "2",
+                "telemach": "3",
+                "t2": "4",
+                "Total TV": "5",
+            },
+            "columns": "Q1b_1_other,Q1b_2_other,Q1b_3_other",
+            "recomenders":  "a1, a1 slovenija, amis, ario, bob, hot, hofer, hofer telekom, hofer hot, mobitel, neo, siol, samsung, sanmix, simobil, svislar, t2, t1, telekom, telekom slovenije, telemach, tvspored, totaltv"
+        },        
         "Other Use Case 1": {
             "mergers": {"example1": "merged_example1"},
             "renamers": {"example2": "renamed_example2"},
             "identificators": {"example3": "1"},
+            "columns": "example1, example2, example3",
+            "recomenders": "example1, example2, example3",
         },
         "Other Use Case 2": {
             "mergers": {"example4": "merged_example4"},
             "renamers": {"example5": "renamed_example5"},
             "identificators": {"example6": "1"},
+            "columns": "example1, example2, example3",
+            "recomenders": "example1, example2, example3",
         },
     }
 
@@ -107,6 +145,7 @@ with tab2:
         if 'processed_dfs' in st.session_state:
             st.write("Če želite ponovno vnesti podatke osvežite stran.")
         else:
+           
             st.write("Naloži CSV datoteko in vnesi ime stolpca.")
             # File uploader
             uploaded_file = st.file_uploader("Naloži CSV", type="csv")
@@ -114,8 +153,8 @@ with tab2:
             # Input for column name
             column_name = st.text_input(
                 "Vnesite ime stolpca ločeno z vejico:",
-                # value="Q1a_1_other,Q1a_2_other,Q1a_3_other",
-                placeholder="npr., Q1a_1_other, Q1a_2_other, Q1a_3_other"
+                value=st.session_state['usecase']["columns"],
+                placeholder="npr." + st.session_state['usecase']["columns"]
             )
             recognised_column_names = []
             processed_dfs = []
@@ -154,7 +193,7 @@ with tab2:
                         label_visibility="collapsed"
                     )   
                     if len(recognised_column_names) > 0:
-                        recommended_words = "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, hot telekom, hofer telekom, t-2, mobitel, izi, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do"
+                        recommended_words = st.session_state['usecase']["recomenders"]
                         st.write("Priporočen seznam besed:")
                         st.text_area(
                             "Priporočene besede:",
