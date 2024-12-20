@@ -153,7 +153,7 @@ with tab2:
             # Input for column name
             column_name = st.text_input(
                 "Vnesite ime stolpca ločeno z vejico:",
-                value=st.session_state['usecase']["columns"],
+                # value=st.session_state['usecase']["columns"],
                 placeholder="npr." + st.session_state['usecase']["columns"]
             )
             recognised_column_names = []
