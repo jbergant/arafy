@@ -52,23 +52,36 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7  = st.tabs([ "1. Nastavitve", "2. Vnos 
 
 with tab1:
     use_cases = {
-        "Mobilni ponudniki": {
+        "mobilni ponudniki": {
             "mergers": {
                 "a1 slovenija": "a1",
+                "simobil": "a1",
+                "izi mobil": "a1",
                 "hofer": "hot",
                 "hot mobil": "hot",
                 "hot telekom": "hot",
                 "hofer telekom": "hot",
                 "telekom slovenije": "telekom",
+                "mobitel": "telekom",
                 "t-2": "t2",
+                "re do": "re:do",
+                "ario": "drugo",
+                "apple": "drugo",
+                "debitel": "drugo"
             },
             "renamers": {
                 "mobitel": "telekom",
+                "siol": "telekom",
                 "simobil": "a1",
+                "izi": "a1",
                 "tuš mobil": "telemach",
                 "tuš": "telemach",
-                "izi mobil": "a1",
-                "siol": "telekom",
+                "spar mobil": "drugo",
+                "spar": "drugo",
+                "amis": "telemach",
+                "debitel": "drugo",
+                "ario": "drugo",
+                "apple": "drugo"
             },
             "identificators": {
                 "telekom": "1",
@@ -79,10 +92,10 @@ with tab1:
                 "hot": "6",
                 "re:do": "7",
             },
-            "columns": "Q1a_1_other,Q1a_2_other,Q1a_3_other",
-            "recomenders":  "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, hot telekom, hofer telekom, t-2, mobitel, izi, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do"
+            "columns": "Q1a_1_other,Q1a_2_other,Q1a_3_other,Q1a_4_other,Q1a_5_other,Q1a_6_other,Q1a_7_other,Q1a_8_other,Q1a_9_other,Q1a_10_other",
+            "recomenders":  "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, amis, apple, ario, debitel, hot telekom, hofer telekom, t-2, mobitel, izi, spar, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do"
         },
-        "Fiksni ponudniki": {
+        "fiksni ponudniki": {
             "mergers": {
                 "a1 slovenija": "a1",
                 "a2": "a1",
@@ -90,45 +103,148 @@ with tab1:
                 "hot mobil": "hot",
                 "hot telekom": "hot",
                 "hofer telekom": "hot",
+                "hofer hot": "hot",
                 "telekom slovenije": "telekom",
+                "siol": "telekom",
+                "neo": "telekom",
                 "t-2": "t2",
+                "t1": "t2",
+                "radio in televizija slovenije": "telekom",
+                "totaltv": "total tv"
             },
             "renamers": {
-                "mobitel": "telekom",
                 "simobil": "a1",
-                "tuš mobil": "telemach",
-                "tuš": "telemach",
-                "izi mobil": "a1",
+                "izi mobil": "a1",                
+                "mobitel": "telekom",
                 "siol": "telekom",
+                "izi mobil": "a1",
                 "amis": "a1",
-                "ario": "telemach",
                 "neo": "telekom",
+                "eon": "telemach",
+                "ario": "telemach",
+                "svislar": "telemach",
+                "t1": "t2",
+                "radio in televizija slovenije": "telekom",
+                "netflix": "drugo",
+                "samsung": "drugo",
+                "sanmix": "drugo",
+                "tvspored": "drugo",
+                "voyo": "drugo"
             },
             "identificators": {
                 "telekom": "1",
                 "a1": "2",
                 "telemach": "3",
                 "t2": "4",
-                "Total TV": "5",
+                "total tv": "5",
+                "drugo": "6",
             },
-            "columns": "Q1b_1_other,Q1b_2_other,Q1b_3_other",
-            "recomenders":  "a1, a1 slovenija, amis, ario, bob, hot, hofer, hofer telekom, hofer hot, mobitel, neo, siol, samsung, sanmix, simobil, svislar, t2, t1, telekom, telekom slovenije, telemach, tvspored, totaltv"
+            "columns": "Q1b_1_other,Q1b_2_other,Q1b_3_other,Q1b_4_other,Q1b_4_other,Q1b_6_other,Q1b_7_other,Q1b_8_other,Q1b_9_other",
+            "recomenders":  "a1, a1 slovenija, amis, ario, bob, hot, hofer, hofer telekom, hofer hot, mobitel, neo, eon, netflix, radio in televizija slovenije, telstra, siol, samsung, sanmix, simobil, svislar, t2, t1, telekom, telekom slovenije, telemach, tvspored, totaltv, voyo"
         },        
-        "Other Use Case 1": {
-            "mergers": {"example1": "merged_example1"},
-            "renamers": {"example2": "renamed_example2"},
-            "identificators": {"example3": "1"},
-            "columns": "example1, example2, example3",
-            "recomenders": "example1, example2, example3",
+        "banke": {
+            "mergers": {
+                "nova ljubljanska banka": "nlb",
+                "addiko": "addiko bank",
+                "bks": "bks bank",
+                "banka sparkasse": "sparkasse",
+                "dbs": "deželna banka slovenije",
+                "derma banka": "deželna banka slovenije",
+                "lon": "hranilnica lon",
+                "ispb": "intesa sanpaolo bank",
+                "intesa": "intesa sanpaolo bank",
+                "nkbm": "nova kbm (abanka)",
+                "nova kreditna banka maribor": "nova kbm (abanka)",
+                "nova kbm maribor": "nova kbm (abanka)",
+                "phv": "primorska hranilnica vipava",
+                "unicredit": "unicredit bank",
+                "unicreditbank": "unicredit bank",
+                "ucb": "unicredit bank",
+                "skb": "skb",
+                "skbbanka": "skb",
+                "skbnkbm": "skb",
+                "banka celje": "nova kbm (abanka)",
+                "hranilnica vipava": "primorska hranilnica vipava",
+                "primorska": "primorska hranilnica vipava"
+            },
+            "renamers": {
+                "sberbank": "n banka",
+                "grawe": "nova kbm (abanka)",
+                "otpbank": "nova kbm (abanka)",
+                "otp": "nova kbm (abanka)",
+                "ljubljanska banka": "nlb",
+                "hippo": "nova kbm (abanka)"
+            },
+            "identificators": {
+                "nlb": "1",
+                "addiko bank": "2",
+                "bks bank": "3",
+                "delavska hranilnica": "4",
+                "deželna banka slovenije": "5",
+                "gorenjska banka": "6",
+                "hranilnica lon": "7",
+                "intesa sanpaolo bank": "8",
+                "nova kbm (abanka)": "9",
+                "primorska hranilnica vipava": "10",
+                "n banka": "11",
+                "skb": "12",
+                "sparkasse": "13",
+                "unicredit bank": "14",
+                "drugo": "15"
+            },
+            "columns": "v1_1_other, v1_2_other, v1_3_other, v1_4_other, v1_5_other, v1_6_other, v1_7_other, v1_8_other, v1_9_other, v1_10_other, v1_11_other",
+            "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, derma banka, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kbm maribir, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank"
         },
-        "Other Use Case 2": {
-            "mergers": {"example4": "merged_example4"},
-            "renamers": {"example5": "renamed_example5"},
-            "identificators": {"example6": "1"},
-            "columns": "example1, example2, example3",
-            "recomenders": "example1, example2, example3",
+        "vode": {
+            "mergers": {
+                "radenska": "radenska gazirana",
+                "radenska gazirana voda": "radenska gazirana",
+                "radenska blaga gazirana voda": "radenska blago gazirana",
+                "jamniška kiselica": "jamnica",
+                "kiseljak": "sarajevski kiseljak",
+                "mg mivela": "mivela mg",
+                "lisa": "lissa (hofer)",
+                "hofer": "lissa (hofer)",
+                "saguaro": "saguaro (lidl)",
+                "naše nam paše lidl": "saguaro (lidl)",
+                "romaquelle": "römmerquelle",
+                "rmrquele": "römmerquelle",
+                "templj": "tempel",
+                "tuzlanski kiseljak": "sarajevski kiseljak",
+                "sarajevski vrelec": "sarajevski kiseljak"
+            },
+            "renamers": {
+                "donatmg": "donat",
+                "jana": "jamnica",
+                "lipiki studenac": "jamnica",
+                "prima": "primaqua",
+                "tu": "drugo",
+                "tuvoda": "drugo",
+                "edina": "drugo",
+                "mercator voda": "drugo",
+                "trgovinske znamke": "drugo"
+            },
+            "identificators": {
+                "radenska gazirana": "1",
+                "radenska blago gazirana": "2",
+                "jamnica": "3",
+                "tempel": "4",
+                "dana": "5",
+                "mivela mg": "6",
+                "donat": "7",
+                "römmerquelle": "8",
+                "sarajevski kiseljak": "9",
+                "lissa (hofer)": "10",
+                "saguaro (lidl)": "11",
+                "cana royal water": "12",
+                "primaqua": "13",
+            },
+            "columns": "S1_1_other, S1_2_other, S1_3_other, S1_4_other, S1_5_other, S1_6_other, S1_7_other, S1_8_other, S1_9_other, S1_10_other",
+            "recomenders": "abc, aqua, babylove, bistra, blues, coca cola, cockta, corona, costela, costello, dana, dm, donat, donatmg, edina, eurospin, evian, fanta, fiji, fruc, fructal, gaia, hofer, jamnica, jana, jamniška kiselica, kiseljak, lidl, lipiki studenac, lisa, mercator, mercator voda, mg mivela, natura, naše nam paše lidl, oaza, oda, ora, perrier, pivo, prima, primaqua, primula, qelle, radenska, rauch, redbull, roemerquelle, rogaška, rogaška slatina, romaquelle, rmrquele, scweps, saguaro, sanpellegrino, sanbenedetto, sarajevski vrelec, sarajevski kiseljak, segura, smart, spar, sparvoda, sprite, studena, svetina, tempel, templj, tonic, trisrca, tus, tuzlanski kiseljak, tu, tuvoda, voss, zala, cedevita, ferarelle, guizza, izvir, knjaz miloš, monin, trgovinske znamke, šveps",
         },
     }
+
+
 
     # Display a selectbox for the user to choose a use case
     selected_use_case_name = st.selectbox("Izberite primer uporabe:", list(use_cases.keys()))
@@ -153,7 +269,7 @@ with tab2:
             # Input for column name
             column_name = st.text_input(
                 "Vnesite ime stolpca ločeno z vejico:",
-                # value=st.session_state['usecase']["columns"],
+                value=st.session_state['usecase']["columns"],
                 placeholder="npr." + st.session_state['usecase']["columns"]
             )
             recognised_column_names = []
@@ -214,7 +330,7 @@ with tab2:
                 st.subheader("Seznam besed za klasifikacijo:")
                 word_input = st.text_area(
                     "Vpiši seznam besed, ločenih z vejicami, za klasifikacijo:",
-                    # value=recommended_words,
+                    value=recommended_words,
                     placeholder="npr., telemach, telekom, a1, izi, hot"
                 )
 
@@ -455,7 +571,7 @@ with tab6:
         updated_dfs = copy.deepcopy(processed_dfs)
 
         for df_index, processed_df in enumerate(processed_dfs):
-            updated_dfs[df_index]['najboljse_ujemanje'] = processed_df['najboljse_ujemanje'].apply(zdruzi_best_match)
+            processed_df['najboljse_ujemanje'] = processed_df['najboljse_ujemanje'].apply(zdruzi_best_match)
             updated_dfs[df_index]['najboljse_ujemanje'] = processed_df['najboljse_ujemanje'].apply(rename_best_match)
             updated_dfs[df_index]['identifikator'] = processed_df['najboljse_ujemanje'].apply(get_identifier)
             updated_dfs[df_index].drop(['za_pregled'], axis=1, inplace=True)
