@@ -269,7 +269,7 @@ with tab2:
             # Input for column name
             column_name = st.text_input(
                 "Vnesite ime stolpca ločeno z vejico:",
-                value=st.session_state['usecase']["columns"],
+                # value=st.session_state['usecase']["columns"],
                 placeholder="npr." + st.session_state['usecase']["columns"]
             )
             recognised_column_names = []
@@ -330,7 +330,7 @@ with tab2:
                 st.subheader("Seznam besed za klasifikacijo:")
                 word_input = st.text_area(
                     "Vpiši seznam besed, ločenih z vejicami, za klasifikacijo:",
-                    value=recommended_words,
+                    # value=recommended_words,
                     placeholder="npr., telemach, telekom, a1, izi, hot"
                 )
 
@@ -478,6 +478,14 @@ with tab5:
     if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']:
         st.subheader("Pravila za združevanje rezultatov:")
 
+        st.write("Priporočene besede:")
+        st.text_area(
+            "Priporočene besede:",
+            value=st.session_state['usecase']["recomenders"],
+            height=200,
+            label_visibility="collapsed"
+        )
+
         merge_switcher = st.session_state['usecase']["mergers"]
 
         # Pretvorimo slovar v DataFrame za urejanje
@@ -563,7 +571,7 @@ with tab6:
         def get_identifier(name):
             max_identifier = max(int(value) for value in edited_identifiers.values()) + 1
             if name is None or pd.isna(name):
-                return max_identifier  # Če je vrednost None ali NaN, MAX identifikator
+                return None  
             return edited_identifiers.get(name.lower(), max_identifier)        
  
 
