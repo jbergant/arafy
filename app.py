@@ -47,7 +47,7 @@ def process_csv(df, column, words):
 # Streamlit Tabs
 tab1, tab2, tab3, tab4, tab5, tab6, tab7  = st.tabs([ "1. Nastavitve", "2. Vnos podatkov", "3. Pregled podatkov", "4. Ročna klasifikacija", "5. Združevanje", "6. Pregled", "7. Prenos"])
 
-
+st.session_state['similarity_threshold'] = 0.7
 
 
 with tab1:
@@ -57,6 +57,7 @@ with tab1:
                 "a1 slovenija": "a1",
                 "simobil": "a1",
                 "izi mobil": "a1",
+                "izimobil": "a1",
                 "hofer": "hot",
                 "hot mobil": "hot",
                 "hot telekom": "hot",
@@ -193,7 +194,7 @@ with tab1:
                 "drugo": "15"
             },
             "columns": "v1_1_other, v1_2_other, v1_3_other, v1_4_other, v1_5_other, v1_6_other, v1_7_other, v1_8_other, v1_9_other, v1_10_other, v1_11_other",
-            "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, derma banka, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kbm maribir, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank"
+            "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kbm maribir, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank"
         },
         "vode": {
             "mergers": {
@@ -248,6 +249,16 @@ with tab1:
 
     # Display a selectbox for the user to choose a use case
     selected_use_case_name = st.selectbox("Izberite primer uporabe:", list(use_cases.keys()))
+
+
+    similarity_threshold = st.slider(
+        "Izberite prag podobnosti za ujemanje:",
+        min_value=0.1,
+        max_value=0.9,
+        value=st.session_state['similarity_threshold'],
+        step=0.1
+    )
+    st.session_state['similarity_threshold'] = similarity_threshold
 
     # Fetch the selected use case settings
     st.session_state['usecase'] = use_cases[selected_use_case_name]
@@ -333,8 +344,10 @@ with tab2:
                     # value=recommended_words,
                     placeholder="npr., telemach, telekom, a1, izi, hot"
                 )
-
+                
             if word_input:
+                st.session_state['selected_words'] = word_input
+
                 with st.spinner('Preverjam besede...'):  
                     words = validate_words(word_input)
                 if not words:
@@ -478,27 +491,47 @@ with tab5:
     if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']:
         st.subheader("Pravila za združevanje rezultatov:")
 
-        st.write("Priporočene besede:")
-        st.text_area(
-            "Priporočene besede:",
-            value=st.session_state['usecase']["recomenders"],
-            height=200,
-            label_visibility="collapsed"
-        )
 
-        merge_switcher = st.session_state['usecase']["mergers"]
+        st.write("Pregled izbrani besed v pravilih združevanja, preimenovanja in identifikatorjev:")
 
-        # Pretvorimo slovar v DataFrame za urejanje
+        if 'selected_words' in st.session_state:
+            selected_words = validate_words(st.session_state['selected_words'])
+            if selected_words:
+                # Create a DataFrame to display the presence of words in different dictionaries
+                presence_data = {
+                    "Beseda": [],
+                    "V združevanju": [],
+                    "V preimenovanju": [],
+                    "V identifikatorjih": []
+                }
+
+                for word in selected_words:
+                    presence_data["Beseda"].append(word)
+                    presence_data["V združevanju"].append(word in st.session_state['usecase']["mergers"])
+                    presence_data["V preimenovanju"].append(word in st.session_state['usecase']["renamers"])
+                    presence_data["V identifikatorjih"].append(word in st.session_state['usecase']["identificators"])
+
+                presence_df = pd.DataFrame(presence_data)
+                st.dataframe(presence_df)
+            else:
+                st.error("Neveljaven vnos. Prosimo, vnesite seznam besed, ločenih z vejicami.")
+        else:
+            st.warning("Najprej vnesite seznam besed za klasifikacijo.")
+
+
+
+
+
+
+        merge_switcher = st.session_state['usecase']["mergers"]   
         merger_df = pd.DataFrame(list(merge_switcher.items()), columns=["Iz besede", "V besedo"])
         
-        # Uporabnikom omogočimo urejanje DataFrame-a
         edited_merger_switcher_df = st.data_editor(
             merger_df,
             num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
             use_container_width=True
         )
         
-        # Pretvorimo urejeni DataFrame nazaj v slovar
         merge_edited_switcher = dict(zip(edited_merger_switcher_df["Iz besede"], edited_merger_switcher_df["V besedo"]))
         st.session_state['merge_edited_switcher'] = merge_edited_switcher
 
@@ -507,7 +540,6 @@ with tab5:
 
         st.subheader("Pravila za preimenovanje rezultatov:")
         rename_switcher = st.session_state['usecase']["renamers"]
-         
         # Pretvorimo slovar v DataFrame za urejanje
         renamer_df = pd.DataFrame(list(rename_switcher.items()), columns=["Izvirno ime", "Novo ime"])
         
@@ -541,7 +573,8 @@ with tab5:
         
         # Pretvorimo urejeni DataFrame nazaj v slovar
         edited_identifiers = dict(zip(edited_identifier_df["Ime"], edited_identifier_df["Identifikator"]))  
-        st.session_state['edited_identifiers'] = edited_identifiers      
+        st.session_state['edited_identifiers'] = edited_identifiers   
+
     else:
         st.warning("Najprej naloži in preglej podatke.")    
 
