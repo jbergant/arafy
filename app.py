@@ -181,6 +181,7 @@ if selected_tab == "tab1":
                     "lon": "hranilnica lon",
                     "ispb": "intesa sanpaolo bank",
                     "intesa sanpaolo": "intesa sanpaolo bank",
+                    "intesa": "intesa sanpaolo bank",
                     "nova kbm": "intesa sanpaolo bank",
                     "nkbm": "nova kbm (abanka)",
                     "nova kbm": "nova kbm (abanka)",
