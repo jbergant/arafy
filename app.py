@@ -3,6 +3,15 @@ import pandas as pd
 import Levenshtein
 import csv
 import copy
+import logging
+
+
+
+logging.basicConfig(level=logging.INFO)
+
+# Function to log messages
+def log_message(message):
+    logging.info(message)
 
 def validate_words(input_string):
     """Preveri, da je vnos seznam besed, ločenih z vejicami, ki dovoljuje posebne znake in številke."""
@@ -147,20 +156,26 @@ with tab1:
             "mergers": {
                 "nova ljubljanska banka": "nlb",
                 "addiko": "addiko bank",
+                "addico bank": "addiko bank",
                 "bks": "bks bank",
                 "banka sparkasse": "sparkasse",
                 "dbs": "deželna banka slovenije",
                 "derma banka": "deželna banka slovenije",
                 "lon": "hranilnica lon",
                 "ispb": "intesa sanpaolo bank",
-                "intesa": "intesa sanpaolo bank",
+                "intesa sanpaolo": "intesa sanpaolo bank",
+                "nova kbm": "intesa sanpaolo bank",
                 "nkbm": "nova kbm (abanka)",
+                "nova kbm": "nova kbm (abanka)",
                 "nova kreditna banka maribor": "nova kbm (abanka)",
                 "nova kbm maribor": "nova kbm (abanka)",
                 "phv": "primorska hranilnica vipava",
                 "unicredit": "unicredit bank",
                 "unicreditbank": "unicredit bank",
+                "unicredit banka slovenija": "unicredit bank",
                 "ucb": "unicredit bank",
+                "gorenjska": "gorenjska banka",
+                "dh": "delavska hranilnica",
                 "skb": "skb",
                 "skbbanka": "skb",
                 "skbnkbm": "skb",
@@ -194,7 +209,7 @@ with tab1:
                 "drugo": "15"
             },
             "columns": "v1_1_other, v1_2_other, v1_3_other, v1_4_other, v1_5_other, v1_6_other, v1_7_other, v1_8_other, v1_9_other, v1_10_other, v1_11_other",
-            "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kbm maribir, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank"
+            "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank"
         },
         "vode": {
             "mergers": {
@@ -241,7 +256,7 @@ with tab1:
                 "primaqua": "13",
             },
             "columns": "S1_1_other, S1_2_other, S1_3_other, S1_4_other, S1_5_other, S1_6_other, S1_7_other, S1_8_other, S1_9_other, S1_10_other",
-            "recomenders": "abc, aqua, babylove, bistra, blues, coca cola, cockta, corona, costela, costello, dana, dm, donat, donatmg, edina, eurospin, evian, fanta, fiji, fruc, fructal, gaia, hofer, jamnica, jana, jamniška kiselica, kiseljak, lidl, lipiki studenac, lisa, mercator, mercator voda, mg mivela, natura, naše nam paše lidl, oaza, oda, ora, perrier, pivo, prima, primaqua, primula, qelle, radenska, rauch, redbull, roemerquelle, rogaška, rogaška slatina, romaquelle, rmrquele, scweps, saguaro, sanpellegrino, sanbenedetto, sarajevski vrelec, sarajevski kiseljak, segura, smart, spar, sparvoda, sprite, studena, svetina, tempel, templj, tonic, trisrca, tus, tuzlanski kiseljak, tu, tuvoda, voss, zala, cedevita, ferarelle, guizza, izvir, knjaz miloš, monin, trgovinske znamke, šveps",
+            "recomenders": "bistra, coca cola, cockta, corona, costela, dana, dm, donat, donatmg, edina, eurospin, evian, fanta, fiji, fruc, fructal, gaia, hofer, jamnica, jana, jamniška kiselica, kiseljak, lidl, lipiki studenac, lisa, mercator, mercator voda, mg mivela, natura, oaza, oda, ora, perrier, pivo, prima, primaqua, primula, qelle, radenska, rauch, redbull, roemerquelle, rogaška, rogaška slatina, scweps, saguaro, sanpellegrino, sanbenedetto, sarajevski vrelec, sarajevski kiseljak, segura, smart, spar, sparvoda, sprite, studenac, svetina, tempel, tonic, trisrca, tus, tuzlanski kiseljak, tu, tuvoda, voss, zala, cedevita, ferarelle, guizza, izvir, knjaz miloš, monin, trgovinske znamke, šveps",
         },
     }
 
@@ -262,7 +277,7 @@ with tab1:
 
     # Fetch the selected use case settings
     st.session_state['usecase'] = use_cases[selected_use_case_name]
-
+    log_message("tab1 usecase :)")
 
 
 # Tab 2: Input Data
@@ -289,53 +304,61 @@ with tab2:
 
             if uploaded_file and column_name:
                 column_names = [col.strip() for col in column_name.split(',')]
+                have_delimiter = False
                 try:
                     uploaded_file.seek(0)  
                     sample = uploaded_file.read(1024).decode('utf-8')  
                     uploaded_file.seek(0)  
                     detected_delimiter = csv.Sniffer().sniff(sample).delimiter 
+                    have_delimiter = True
+                except csv.Error:
+                    detected_delimiter = ';'
+                    have_delimiter = True
+                except Exception as e:
+                    st.error(f"Prišlo je do napake pri branju datoteke: {e}")    
+                if have_delimiter == True:      
+                    try:
+                        df = pd.read_csv(uploaded_file, delimiter=detected_delimiter)
+                        st.session_state['initial_df'] = df
+                        unique_words_set = set()  # Use a set to collect unique words
 
-                    df = pd.read_csv(uploaded_file, delimiter=detected_delimiter)
-                    st.session_state['initial_df'] = df
-                    unique_words_set = set()  # Use a set to collect unique words
+                        for col in column_names:
+                            if col in df.columns:
+                                recognised_column_names.append(col)
+                                unique_words = df[col].dropna().unique()
+                                # Strip words, filter out empty strings, and add unique words to the set
+                                unique_words_set.update([word.strip() for word in unique_words if str(word).strip()])
+                            else:
+                                st.error(f"Stolpec '{col}' ni najden v naloženi CSV datoteki.")
 
-                    for col in column_names:
-                        if col in df.columns:
-                            recognised_column_names.append(col)
-                            unique_words = df[col].dropna().unique()
-                            # Strip words, filter out empty strings, and add unique words to the set
-                            unique_words_set.update([word.strip() for word in unique_words if str(word).strip()])
-                        else:
-                            st.error(f"Stolpec '{col}' ni najden v naloženi CSV datoteki.")
+                        # Convert the unique set back to a sorted string for display
+                        unique_words_text = ", ".join(sorted(unique_words_set))
 
-                    # Convert the unique set back to a sorted string for display
-                    unique_words_text = ", ".join(sorted(unique_words_set))
-
-                    # Display the unique words
-                    st.write("Unikatne besede:")
-                    st.text_area(
-                        "Unikatne besede v stolpcih (kopirajte, če je potrebno):",
-                        value=unique_words_text,
-                        height=150,
-                        label_visibility="collapsed"
-                    )   
-                    if len(recognised_column_names) > 0:
-                        recommended_words = st.session_state['usecase']["recomenders"]
-                        st.write("Priporočen seznam besed:")
+                        # Display the unique words
+                        st.write("Unikatne besede:")
                         st.text_area(
-                            "Priporočene besede:",
-                            value=recommended_words,
+                            "Unikatne besede v stolpcih (kopirajte, če je potrebno):",
+                            value=unique_words_text,
                             height=150,
                             label_visibility="collapsed"
-                        )
-                    else:
-                        st.error(f"Stolpeci ne obstajajo v naloženi CSV datoteki.")
-                except pd.errors.EmptyDataError:
-                    st.error("CSV datoteka je prazna ali ima napačno obliko.")
-                except csv.Error:
-                    st.error("Ni mogoče zaznati ločila v datoteki. Preverite, ali je datoteka pravilno oblikovana.")
-                except Exception as e:
-                    st.error(f"Prišlo je do napake pri branju datoteke: {e}")
+                        )   
+                        if len(recognised_column_names) > 0:
+                            recommended_words = st.session_state['usecase']["recomenders"]
+                            st.write("Priporočen seznam besed:")
+                            st.text_area(
+                                "Priporočene besede:",
+                                value=recommended_words,
+                                height=150,
+                                label_visibility="collapsed"
+                            )
+                        else:
+                            st.error(f"Stolpeci ne obstajajo v naloženi CSV datoteki.")
+                    except pd.errors.EmptyDataError:
+                        st.error("CSV datoteka je prazna ali ima napačno obliko.")
+                    except csv.Error:
+                        st.error("Ni mogoče zaznati ločila v datoteki. Preverite, ali je datoteka pravilno oblikovana." )
+                    except Exception as e:
+                        st.error(f"Prišlo je do napake pri branju datoteke: {e}")
 
             if len(recognised_column_names) > 0:
                 st.subheader("Seznam besed za klasifikacijo:")
@@ -379,7 +402,7 @@ with tab2:
                         st.success("CSV datoteka uspešno obdelana!")
 
 
-            
+                        log_message("tab2 CSV :)")
                     else:
                         st.error("Napaka pri obdelavi CSV datoteke.")
                 except Exception as e:
@@ -424,8 +447,7 @@ with tab3:
                     st.session_state['processed_dfs'][selected_index] = edited_df
                     st.toast(f"Spremembe za stolpec '{st.session_state['recognised_column_names'][selected_index]}' so shranjene!")
 
-            # Display the updated DataFrame from session state
-            # st.write("Posodobljena tabela:", st.session_state['processed_dfs'][selected_index])
+            log_message("tab3 DONE?!?!")
     else:
         st.warning("Najprej naloži in preglej podatke.")    
 
@@ -436,7 +458,7 @@ with tab3:
 with tab4:
     st.header("3. Ročna klasifikacija")
 
-    if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']:
+    if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']==True:
 
         # Work with a copy of processed_dfs to avoid modifying directly until necessary
         processed_dfs = copy.deepcopy(st.session_state['processed_dfs'])
@@ -478,7 +500,8 @@ with tab4:
 
                 # Update only the rows in df_to_check back into the original DataFrame
                 processed_df.update(df_to_check)
-                st.session_state['processed_dfs'][df_index] = processed_df  # Save the updated DataFrame
+                st.session_state['processed_dfs'][df_index] = processed_df 
+                log_message("tab4 processed_dfs")
             else:
                 st.success("Ni vrstic za pregled!")
     else:
@@ -488,41 +511,49 @@ with tab4:
 with tab5:
     st.header("4. Združevanje in preimenovanje")
     
-    if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']:
-        st.subheader("Pravila za združevanje rezultatov:")
+    if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']==True:
+        
 
 
         st.write("Pregled izbrani besed v pravilih združevanja, preimenovanja in identifikatorjev:")
 
-        if 'selected_words' in st.session_state:
-            selected_words = validate_words(st.session_state['selected_words'])
-            if selected_words:
-                # Create a DataFrame to display the presence of words in different dictionaries
-                presence_data = {
-                    "Beseda": [],
-                    "V združevanju": [],
-                    "V preimenovanju": [],
-                    "V identifikatorjih": []
-                }
+        if ('presence_data' in st.session_state or 'selected_words' in st.session_state):
+            if 'presence_data' in st.session_state:
+                presence_data = st.session_state['presence_data']
+            elif 'selected_words' in st.session_state:
+                selected_words = validate_words(st.session_state['selected_words'])
+                if selected_words:
+                    # Create a DataFrame to display the presence of words in different dictionaries
+                    presence_data = {
+                        "Beseda": [],
+                        "V združevanju": [],
+                        "V preimenovanju": [],
+                        "V identifikatorjih": []
+                    }
 
-                for word in selected_words:
-                    presence_data["Beseda"].append(word)
-                    presence_data["V združevanju"].append(word in st.session_state['usecase']["mergers"])
-                    presence_data["V preimenovanju"].append(word in st.session_state['usecase']["renamers"])
-                    presence_data["V identifikatorjih"].append(word in st.session_state['usecase']["identificators"])
+                    for word in selected_words:
+                        presence_data["Beseda"].append(word)
+                        presence_data["V združevanju"].append(word in st.session_state['usecase']["mergers"])
+                        presence_data["V preimenovanju"].append(word in st.session_state['usecase']["renamers"])
+                        presence_data["V identifikatorjih"].append(word in st.session_state['usecase']["identificators"])
 
-                presence_df = pd.DataFrame(presence_data)
-                st.dataframe(presence_df)
-            else:
-                st.error("Neveljaven vnos. Prosimo, vnesite seznam besed, ločenih z vejicami.")
+            presence_df = pd.DataFrame(presence_data)
+
+            left_col, right_col = st.columns([5, 1])  # Adjust proportions as needed (e.g., 3:1 for 75% and 25% width split)
+            with left_col:
+                edited_presence_df = st.data_editor(
+                    presence_df,
+                    num_rows="dynamic", 
+                    use_container_width=True
+                )
+            with right_col:
+                if st.button("Shrani spremembe"):
+                    st.session_state['presence_data'] = edited_presence_df
         else:
             st.warning("Najprej vnesite seznam besed za klasifikacijo.")
 
 
-
-
-
-
+        st.subheader("Pravila za združevanje rezultatov:")
         merge_switcher = st.session_state['usecase']["mergers"]   
         merger_df = pd.DataFrame(list(merge_switcher.items()), columns=["Iz besede", "V besedo"])
         
@@ -534,7 +565,6 @@ with tab5:
         
         merge_edited_switcher = dict(zip(edited_merger_switcher_df["Iz besede"], edited_merger_switcher_df["V besedo"]))
         st.session_state['merge_edited_switcher'] = merge_edited_switcher
-
 
 
 
@@ -555,9 +585,6 @@ with tab5:
         st.session_state['rename_edited_switcher'] = rename_edited_switcher
 
 
-
-
-
         st.subheader("Identifikatorji:")
 
         default_identifiers = st.session_state['usecase']["identificators"]    
@@ -575,6 +602,8 @@ with tab5:
         edited_identifiers = dict(zip(edited_identifier_df["Ime"], edited_identifier_df["Identifikator"]))  
         st.session_state['edited_identifiers'] = edited_identifiers   
 
+        log_message("tab5 edited_identifiers")
+        
     else:
         st.warning("Najprej naloži in preglej podatke.")    
 
@@ -582,7 +611,7 @@ with tab5:
 with tab6:
     st.header("4. Pregled rezultatov")
     
-    if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state  and 'done2_state' in st.session_state and st.session_state['done2_state'] and 'merge_edited_switcher' in st.session_state and 'edited_identifiers' in st.session_state:
+    if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state  and 'done2_state' in st.session_state and st.session_state['done2_state']==True and 'merge_edited_switcher' in st.session_state and 'edited_identifiers' in st.session_state:
         # Privzeti slovar za identifikatorje
 
 
@@ -612,6 +641,7 @@ with tab6:
         updated_dfs = copy.deepcopy(processed_dfs)
 
         for df_index, processed_df in enumerate(processed_dfs):
+            
             processed_df['najboljse_ujemanje'] = processed_df['najboljse_ujemanje'].apply(zdruzi_best_match)
             updated_dfs[df_index]['najboljse_ujemanje'] = processed_df['najboljse_ujemanje'].apply(rename_best_match)
             updated_dfs[df_index]['identifikator'] = processed_df['najboljse_ujemanje'].apply(get_identifier)
@@ -632,7 +662,9 @@ with tab6:
 
         st.write(f"Posodobljeni podatki za stolpec '{selected_column}':")
         st.dataframe(df_to_display)
-        st.session_state['updated_dfs'] = updated_dfs      
+        st.session_state['updated_dfs'] = updated_dfs    
+        st.session_state['viewed_results'] = True
+        log_message("tab6 viewed_results")
     else:
         st.warning("Pripravi podatke in pravila za združevanje v prejšnjih zavihkih.")
 
@@ -640,18 +672,17 @@ with tab6:
 with tab7:
     st.header("7. Prenos rezultatov")
 
-    if 'usecase' in st.session_state and 'updated_dfs' in st.session_state and 'initial_df' in st.session_state and 'recognised_column_names' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']:
-        st.write("Končni podatki po klasifikaciji:")
+    if 'usecase' in st.session_state and 'updated_dfs' in st.session_state and 'initial_df' in st.session_state and 'recognised_column_names' in st.session_state and 'viewed_results' in st.session_state and st.session_state['viewed_results']==True:
+        log_message("tab7 INNNNNN")
         initial_df = st.session_state['initial_df']
         final_df = initial_df.copy()
         updated_dfs = st.session_state['updated_dfs']
         for df_index, updated_df in enumerate(updated_dfs):
             column_name = st.session_state['recognised_column_names'][df_index]
-            
             # Insert the new columns right after the original column
             col_index = final_df.columns.get_loc(column_name) + 1
             final_df.insert(col_index, column_name + "_najboljse_ujemanje", updated_df['najboljse_ujemanje'])
-            final_df.insert(col_index + 1, column_name + "_identifikator", updated_df['identifikator'])
+            final_df.insert(col_index + 1, column_name + "R", updated_df['identifikator'])
 
 
         st.write(f"CSV za izvox':")
