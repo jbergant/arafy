@@ -1,0 +1,202 @@
+use_cases:
+  banke:
+    columns: v1_1_other, v1_2_other, v1_3_other, v1_4_other, v1_5_other, v1_6_other,
+      v1_7_other, v1_8_other, v1_9_other, v1_10_other, v1_11_other
+    identificators:
+      addiko bank: '2'
+      bks bank: '3'
+      delavska hranilnica: '4'
+      deželna banka slovenije: '5'
+      drugo: '15'
+      gorenjska banka: '6'
+      hranilnica lon: '7'
+      intesa sanpaolo bank: '8'
+      n banka: '11'
+      nlb: '1'
+      nova kbm (abanka): '9'
+      primorska hranilnica vipava: '10'
+      skb: '12'
+      sparkasse: '13'
+      unicredit bank: '14'
+    mergers:
+      addico bank: addiko bank
+      addiko: addiko bank
+      banka celje: nova kbm (abanka)
+      banka sparkasse: sparkasse
+      bks: bks bank
+      dbs: deželna banka slovenije
+      derma banka: deželna banka slovenije
+      dh: delavska hranilnica
+      gorenjska: gorenjska banka
+      hranilnica vipava: primorska hranilnica vipava
+      intesa: intesa sanpaolo bank
+      intesa sanpaolo: intesa sanpaolo bank
+      ispb: intesa sanpaolo bank
+      lon: hranilnica lon
+      nkbm: nova kbm (abanka)
+      nova kbm: nova kbm (abanka)
+      nova kbm maribor: nova kbm (abanka)
+      nova kreditna banka maribor: nova kbm (abanka)
+      nova ljubljanska banka: nlb
+      phv: primorska hranilnica vipava
+      primorska: primorska hranilnica vipava
+      skb: skb
+      skbbanka: skb
+      skbnkbm: skb
+      ucb: unicredit bank
+      unicredit: unicredit bank
+      unicredit banka slovenija: unicredit bank
+      unicreditbank: unicredit bank
+    recomenders: addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska
+      hranilnica, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb,
+      intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kreditna
+      banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka,
+      skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank,
+      banka celje, hranilnica vipava, primorska, sberbank
+    renamers:
+      grawe: nova kbm (abanka)
+      hippo: nova kbm (abanka)
+      ljubljanska banka: nlb
+      otp: nova kbm (abanka)
+      otpbank: nova kbm (abanka)
+      sberbank: n banka
+  fiksni ponudniki:
+    columns: Q1b_1_other,Q1b_2_other,Q1b_3_other,Q1b_4_other,Q1b_4_other,Q1b_6_other,Q1b_7_other,Q1b_8_other,Q1b_9_other
+    identificators:
+      a1: '2'
+      drugo: '6'
+      t2: '4'
+      telekom: '1'
+      telemach: '3'
+      total tv: '5'
+    mergers:
+      a1 slovenija: a1
+      a2: a1
+      hofer: hot
+      hofer hot: hot
+      hofer telekom: hot
+      hot mobil: hot
+      hot telekom: hot
+      neo: telekom
+      radio in televizija slovenije: telekom
+      siol: telekom
+      t-2: t2
+      t1: t2
+      telekom slovenije: telekom
+      totaltv: total tv
+    recomenders: a1, a1 slovenija, amis, ario, bob, hot, hofer, hofer telekom, hofer
+      hot, mobitel, neo, eon, netflix, radio in televizija slovenije, telstra, siol,
+      samsung, sanmix, simobil, svislar, t2, t1, telekom, telekom slovenije, telemach,
+      tvspored, totaltv, voyo
+    renamers:
+      amis: a1
+      ario: telemach
+      eon: telemach
+      izi mobil: a1
+      mobitel: telekom
+      neo: telekom
+      netflix: drugo
+      radio in televizija slovenije: telekom
+      samsung: drugo
+      sanmix: drugo
+      simobil: a1
+      siol: telekom
+      svislar: telemach
+      t1: t2
+      tvspored: drugo
+      voyo: drugo
+  mobilni ponudniki:
+    columns: Q1a_1_other,Q1a_2_other,Q1a_3_other,Q1a_4_other,Q1a_5_other,Q1a_6_other,Q1a_7_other,Q1a_8_other,Q1a_9_other,Q1a_10_other
+    identificators:
+      a1: '2'
+      bob: '5'
+      hot: '6'
+      re:do: '7'
+      t2: '4'
+      telekom: '1'
+      telemach: '3'
+    mergers:
+      a1 slovenija: a1
+      apple: drugo
+      ario: drugo
+      debitel: drugo
+      hofer: hot
+      hofer telekom: hot
+      hot mobil: hot
+      hot telekom: hot
+      izi mobil: a1
+      izimobil: a1
+      mobitel: telekom
+      re do: re:do
+      simobil: a1
+      t-2: t2
+      telekom slovenije: telekom
+    recomenders: telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil,
+      hot, bob, amis, apple, ario, debitel, hot telekom, hofer telekom, t-2, mobitel,
+      izi, spar, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do,
+      hot mobil, siol, re:do
+    renamers:
+      amis: telemach
+      apple: drugo
+      ario: drugo
+      debitel: drugo
+      izi: a1
+      mobitel: telekom
+      simobil: a1
+      siol: telekom
+      spar: drugo
+      spar mobil: drugo
+      tuš: telemach
+      tuš mobil: telemach
+  vode:
+    columns: S1_1_other, S1_2_other, S1_3_other, S1_4_other, S1_5_other, S1_6_other,
+      S1_7_other, S1_8_other, S1_9_other, S1_10_other
+    identificators:
+      cana royal water: '12'
+      dana: '5'
+      donat: '7'
+      jamnica: '3'
+      lissa (hofer): '10'
+      mivela mg: '6'
+      primaqua: '13'
+      radenska blago gazirana: '2'
+      radenska gazirana: '1'
+      römmerquelle: '8'
+      saguaro (lidl): '11'
+      sarajevski kiseljak: '9'
+      tempel: '4'
+    mergers:
+      hofer: lissa (hofer)
+      jamniška kiselica: jamnica
+      kiseljak: sarajevski kiseljak
+      lisa: lissa (hofer)
+      mg mivela: mivela mg
+      naše nam paše lidl: saguaro (lidl)
+      radenska: radenska gazirana
+      radenska blaga gazirana voda: radenska blago gazirana
+      radenska gazirana voda: radenska gazirana
+      rmrquele: römmerquelle
+      romaquelle: römmerquelle
+      saguaro: saguaro (lidl)
+      sarajevski vrelec: sarajevski kiseljak
+      templj: tempel
+      tuzlanski kiseljak: sarajevski kiseljak
+    recomenders: bistra, coca cola, cockta, corona, costela, dana, dm, donat, donatmg,
+      edina, eurospin, evian, fanta, fiji, fruc, fructal, gaia, hofer, jamnica, jana,
+      jamniška kiselica, kiseljak, lidl, lipiki studenac, lisa, mercator, mercator
+      voda, mg mivela, natura, oaza, oda, ora, perrier, pivo, prima, primaqua, primula,
+      qelle, radenska, rauch, redbull, roemerquelle, rogaška, rogaška slatina, scweps,
+      saguaro, sanpellegrino, sanbenedetto, sarajevski vrelec, sarajevski kiseljak,
+      segura, smart, spar, sparvoda, sprite, studenac, svetina, tempel, tonic, trisrca,
+      tus, tuzlanski kiseljak, tu, tuvoda, voss, zala, cedevita, ferarelle, guizza,
+      izvir, knjaz miloš, monin, trgovinske znamke, šveps
+    renamers:
+      donatmg: donat
+      edina: drugo
+      jana: jamnica
+      lipiki studenac: jamnica
+      mercator voda: drugo
+      prima: primaqua
+      trgovinske znamke: drugo
+      tu: drugo
+      tuvoda: drugo

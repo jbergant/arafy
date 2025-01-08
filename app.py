@@ -68,8 +68,8 @@ tabs = [
 selected_tab = stx.tab_bar(data=tabs, default="tab1")
 
 
-
-st.session_state['similarity_threshold'] = 0.7
+if 'similarity_threshold' not in st.session_state:
+    st.session_state['similarity_threshold'] = 0.7
 
 cols = st.columns([2, 8, 2])  # Create three columns, the middle one takes most space
 
@@ -400,7 +400,6 @@ elif selected_tab == "tab2":
                 if uploaded_file and word_input and len(recognised_column_names) > 0:
                     try:
                         uploaded_file.seek(0)  # Reset file pointer before processing again
-                        """Obdelaj CSV datoteko in izračunaj najboljše Levenshteinovo ujemanje za vsako besedo."""
                         
                         with st.spinner('Klasificiram podatke...'):
                             df = pd.read_csv(uploaded_file, delimiter=detected_delimiter)   
@@ -543,10 +542,11 @@ elif selected_tab == "tab5":
             if ('presence_data' in st.session_state or 'selected_words' in st.session_state):
                 if 'presence_data' in st.session_state:
                     presence_data = st.session_state['presence_data']
+                    # log_message("tab5 presence data from session")
                 elif 'selected_words' in st.session_state:
                     selected_words = validate_words(st.session_state['selected_words'])
                     if selected_words:
-                        # Create a DataFrame to display the presence of words in different dictionaries
+                        # log_message("tab5 presence data from selected_words")
                         presence_data = {
                             "Beseda": [],
                             "V združevanju": [],
@@ -562,7 +562,7 @@ elif selected_tab == "tab5":
 
                 presence_df = pd.DataFrame(presence_data)
 
-                left_col, right_col = st.columns([5, 1])  # Adjust proportions as needed (e.g., 3:1 for 75% and 25% width split)
+                left_col, right_col = st.columns([5, 1])  
                 with left_col:
                     edited_presence_df = st.data_editor(
                         presence_df,
@@ -570,7 +570,8 @@ elif selected_tab == "tab5":
                         use_container_width=True
                     )
                 with right_col:
-                    if st.button("Shrani spremembe"):
+                    if st.button("Shrani spremembe", key="save_presence"):
+                        # log_message("tab5 save_presence button clicked")
                         st.session_state['presence_data'] = edited_presence_df
             else:
                 st.warning("Najprej vnesite seznam besed za klasifikacijo.")
@@ -580,14 +581,17 @@ elif selected_tab == "tab5":
             merge_switcher = st.session_state['usecase']["mergers"]   
             merger_df = pd.DataFrame(list(merge_switcher.items()), columns=["Iz besede", "V besedo"])
             
-            edited_merger_switcher_df = st.data_editor(
-                merger_df,
-                num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
-                use_container_width=True
-            )
-            
-            merge_edited_switcher = dict(zip(edited_merger_switcher_df["Iz besede"], edited_merger_switcher_df["V besedo"]))
-            st.session_state['merge_edited_switcher'] = merge_edited_switcher
+            left_col, right_col = st.columns([5, 1])  
+            with left_col:            
+                edited_merger_switcher_df = st.data_editor(
+                    merger_df,
+                    num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
+                    use_container_width=True
+                )
+            with right_col:
+                if st.button("Shrani spremembe", key="save_mergers"):          
+                    merge_edited_switcher = dict(zip(edited_merger_switcher_df["Iz besede"], edited_merger_switcher_df["V besedo"]))
+                    st.session_state['merge_edited_switcher'] = merge_edited_switcher
 
 
 
@@ -596,16 +600,18 @@ elif selected_tab == "tab5":
             # Pretvorimo slovar v DataFrame za urejanje
             renamer_df = pd.DataFrame(list(rename_switcher.items()), columns=["Izvirno ime", "Novo ime"])
             
-            # Uporabnikom omogočimo urejanje DataFrame-a
-            edited_renamer_renamer_df = st.data_editor(
-                renamer_df,
-                num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
-                use_container_width=True
-            )
+            left_col, right_col = st.columns([5, 1])  
+            with left_col:       
+                edited_renamer_renamer_df = st.data_editor(
+                    renamer_df,
+                    num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
+                    use_container_width=True
+                )
             
-            # Pretvorimo urejeni DataFrame nazaj v slovar
-            rename_edited_switcher = dict(zip(edited_renamer_renamer_df["Izvirno ime"], edited_renamer_renamer_df["Novo ime"]))
-            st.session_state['rename_edited_switcher'] = rename_edited_switcher
+            with right_col:
+                if st.button("Shrani spremembe", key="save_renamers"):   
+                    rename_edited_switcher = dict(zip(edited_renamer_renamer_df["Izvirno ime"], edited_renamer_renamer_df["Novo ime"]))
+                    st.session_state['rename_edited_switcher'] = rename_edited_switcher
 
 
             st.subheader("Identifikatorji:")
@@ -614,16 +620,18 @@ elif selected_tab == "tab5":
             # Pretvorimo slovar v DataFrame za urejanje
             identifier_df = pd.DataFrame(list(default_identifiers.items()), columns=["Ime", "Identifikator"])
             
-            # Uporabnikom omogočimo urejanje DataFrame-a
-            edited_identifier_df = st.data_editor(
-                identifier_df,
-                num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
-                use_container_width=True
-            )
-            
-            # Pretvorimo urejeni DataFrame nazaj v slovar
-            edited_identifiers = dict(zip(edited_identifier_df["Ime"], edited_identifier_df["Identifikator"]))  
-            st.session_state['edited_identifiers'] = edited_identifiers   
+            left_col, right_col = st.columns([5, 1])  
+            with left_col: 
+                edited_identifier_df = st.data_editor(
+                    identifier_df,
+                    num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
+                    use_container_width=True
+                )
+                
+            with right_col:
+                if st.button("Shrani spremembe", key="save_identifiers"):   
+                    edited_identifiers = dict(zip(edited_identifier_df["Ime"], edited_identifier_df["Identifikator"]))  
+                    st.session_state['edited_identifiers'] = edited_identifiers   
 
             log_message("tab5 edited_identifiers")
             
