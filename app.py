@@ -310,18 +310,12 @@ elif selected_tab == "tab2":
                 # File uploader
                 uploaded_file = st.file_uploader("Naloži CSV", type="csv")
 
-                # Input for column name
-                column_name = st.text_input(
-                    "Vnesite ime stolpca ločeno z vejico:",
-                    # value=st.session_state['usecase']["columns"],
-                    placeholder="npr." + st.session_state['usecase']["columns"]
-                )
                 recognised_column_names = []
                 processed_dfs = []
                 word_input = None
 
                 if uploaded_file and column_name:
-                    column_names = [col.strip() for col in column_name.split(',')]
+                    
                     have_delimiter = False
                     try:
                         uploaded_file.seek(0)  
@@ -336,10 +330,21 @@ elif selected_tab == "tab2":
                         st.error(f"Prišlo je do napake pri branju datoteke: {e}")    
                     if have_delimiter == True:      
                         try:
+
                             df = pd.read_csv(uploaded_file, delimiter=detected_delimiter)
                             st.session_state['initial_df'] = df
                             unique_words_set = set()  # Use a set to collect unique words
 
+
+
+                            # Input for column name
+                            column_name = st.text_input(
+                                "Vnesite ime stolpca ločeno z vejico:",
+                                value=st.session_state['usecase']["columns"],
+                                placeholder="npr." + st.session_state['usecase']["columns"]
+                            )                            
+
+                            column_names = [col.strip() for col in column_name.split(',')]
                             for col in column_names:
                                 if col in df.columns:
                                     recognised_column_names.append(col)
@@ -382,7 +387,7 @@ elif selected_tab == "tab2":
                     st.subheader("Seznam besed za klasifikacijo:")
                     word_input = st.text_area(
                         "Vpiši seznam besed, ločenih z vejicami, za klasifikacijo:",
-                        # value=recommended_words,
+                        value=recommended_words,
                         placeholder="npr., telemach, telekom, a1, izi, hot"
                     )
                     
@@ -411,9 +416,7 @@ elif selected_tab == "tab2":
                         if len(processed_dfs) > 0 and 'processed_dfs' not in st.session_state:
                             
                             st.session_state['processed_dfs'] = processed_dfs
-                            # st.write("DataFrame ID cccc:", id(st.session_state['processed_dfs'][0]))
-                            # st.write("DataFrame ID cccc:", id(st.session_state['processed_dfs'][1]))
-                            # st.write("DataFrame ID cccc:", id(st.session_state['processed_dfs'][2]))
+    
                             st.session_state['recognised_column_names'] = recognised_column_names
                             st.session_state['words'] = words
                             st.success("CSV datoteka uspešno obdelana!")
@@ -449,25 +452,30 @@ elif selected_tab == "tab3":
 
                 # Display the currently selected DataFrame in an editable data_editor
                 st.write(f"Prikazujem podatke za stolpec: {st.session_state['recognised_column_names'][selected_index]}")
-                # Create two columns: one for the data editor (left) and one for other elements (right)
-                left_col, right_col = st.columns([5, 1])  # Adjust proportions as needed (e.g., 3:1 for 75% and 25% width split)
+                df_to_review = st.session_state['processed_dfs'][selected_index][st.session_state['processed_dfs'][selected_index]['za_pregled'] == True]
 
-                # Place the data editor in the left column
-                with left_col:
-                    edited_df = st.data_editor(
-                        st.session_state['processed_dfs'][selected_index],
-                        num_rows="dynamic",  # Allow dynamic rows
-                        key=f"editable_df_{selected_index}"  # Unique key for each DataFrame
-                    )
+                if not df_to_review.empty:
+                    col1, col2, col3, col4 = st.columns(4)
+                    with col1:
+                        st.write("Beseda")
+                    with col2:
+                        st.write("Najboljše ujemanje")
+                    with col3:
+                        st.write("Razmerje")
+                    with col4:
+                        st.write("Označi kot pregledano")
+                    for index, row in df_to_review.iterrows():
+                        with col1:
+                            row[st.session_state['recognised_column_names'][selected_index]]
+                        with col2:
+                            row['najboljse_ujemanje']
+                        with col3:
+                            row['razmerje']
+                        with col4:
+                            if st.button(f"Označi kot pregledano", key=f"mark_reviewed_{selected_index}_{index}"):
+                                st.session_state['processed_dfs'][selected_index].at[index, 'za_pregled'] = False
+                                st.rerun()
 
-                # Place other elements, like the button, in the right column
-                with right_col:
-                    if st.button("Shrani spremembe"):
-                        # Update the session state with the edited DataFrame
-                        st.session_state['processed_dfs'][selected_index] = edited_df
-                        st.toast(f"Spremembe za stolpec '{st.session_state['recognised_column_names'][selected_index]}' so shranjene!")
-
-                log_message("tab3 DONE?!?!")
         else:
             st.warning("Najprej naloži in preglej podatke.")    
 
@@ -481,50 +489,70 @@ elif selected_tab == "tab4":
 
         if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']==True:
 
-            # Work with a copy of processed_dfs to avoid modifying directly until necessary
-            processed_dfs = copy.deepcopy(st.session_state['processed_dfs'])
+            cols_rocna = st.columns([2, 1])
 
-            for df_index, processed_df in enumerate(processed_dfs):
-                column_name = st.session_state['recognised_column_names'][df_index]
+            with cols_rocna[0]:
+                if "staging_changes" not in st.session_state:
+                    st.session_state["staging_changes"] = {}
 
-                # Ensure 'za_pregled' column has no NaN values
-                if 'za_pregled' in processed_df.columns:
-                    processed_df['za_pregled'] = processed_df['za_pregled'].fillna(False)
+                # Work with a copy of processed_dfs to avoid modifying directly until necessary
+                processed_dfs = copy.deepcopy(st.session_state['processed_dfs'])
 
-                # Filter rows for manual classification
-                df_to_check = processed_df[processed_df['za_pregled']].copy()
+                for df_index, processed_df in enumerate(processed_dfs):
+                    column_name = st.session_state['recognised_column_names'][df_index]
 
-                if not df_to_check.empty:
-                    st.write("Vrstice za pregled:")
+                    # Ensure 'za_pregled' column has no NaN values
+                    if 'za_pregled' in processed_df.columns:
+                        processed_df['za_pregled'] = processed_df['za_pregled'].fillna(False)
 
-                    # Dropdown options for manual classification
-                    dropdown_options = ["neznano"] + st.session_state['words']
+                    # Filter rows for manual classification
+                    df_to_check = processed_df[processed_df['za_pregled']].copy()
 
-                    # Add dropdown menus for each row requiring review
-                    for index, row in df_to_check.iterrows():
-                        original_value = row[column_name]  # Original value for classification
-                        new_match = st.selectbox(
-                            f"Uredi najboljše ujemanje za vrstico {index + 1} (Prvotna vrednost: {original_value}):",
-                            options=dropdown_options,
-                            index=dropdown_options.index(row['najboljse_ujemanje'])
-                            if row['najboljse_ujemanje'] in dropdown_options
-                            else dropdown_options.index("neznano"),
-                            key=f"selectbox_{df_index}_{index}"  # Unique key for each dropdown
-                        )
+                    if not df_to_check.empty:
+                        st.write(f"Besede za pregled v stolpcu '{column_name}':")
 
-                        # Update the row with the new classification
-                        df_to_check.at[index, 'najboljse_ujemanje'] = new_match
+                        # Dropdown options for manual classification
+                        dropdown_options = ["neznano"] + st.session_state['words']
 
-                        # If the match is changed, mark 'za_pregled' as False
-                        if new_match != row['najboljse_ujemanje']:
-                            df_to_check.at[index, 'za_pregled'] = False
+                        # Prepare a staging area for changes specific to the current dataframe
+                        if df_index not in st.session_state["staging_changes"]:
+                            st.session_state["staging_changes"][df_index] = df_to_check.copy()
 
-                    # Update only the rows in df_to_check back into the original DataFrame
-                    processed_df.update(df_to_check)
-                    st.session_state['processed_dfs'][df_index] = processed_df 
-                    log_message("tab4 processed_dfs")
-                else:
-                    st.success("Ni vrstic za pregled!")
+                        # Iterate over rows in the dataframe requiring review
+                        for index, row in df_to_check.iterrows():
+                            original_value = row[column_name]  # Original value for classification
+                            staged_row = st.session_state["staging_changes"][df_index].loc[index]
+
+                            # Selectbox for user input
+                            new_match = st.selectbox(
+                                f"Uredi najboljše ujemanje za vrstico {index + 1} (Prvotna vrednost: {original_value}):",
+                                options=dropdown_options,
+                                index=dropdown_options.index(staged_row['najboljse_ujemanje'])
+                                if staged_row['najboljse_ujemanje'] in dropdown_options
+                                else dropdown_options.index("neznano"),
+                                key=f"selectbox_{df_index}_{index}"
+                            )
+
+                            # Update the staging area with the new value
+                            st.session_state["staging_changes"][df_index].at[index, 'najboljse_ujemanje'] = new_match
+
+            with cols_rocna[1]:
+                if st.button("Shrani vse spremembe"):
+                    for df_index, staged_df in st.session_state["staging_changes"].items():
+                        # Update the original DataFrame with changes from the staging area
+                        for index in staged_df.index:
+                            original_value = st.session_state['processed_dfs'][df_index].loc[index, 'najboljse_ujemanje']
+                            new_value = staged_df.loc[index, 'najboljse_ujemanje']
+
+                            # Only mark 'za_pregled' as False if the value has changed
+                            if original_value != new_value:
+                                st.session_state['processed_dfs'][df_index].at[index, 'najboljse_ujemanje'] = new_value
+                                st.session_state['processed_dfs'][df_index].at[index, 'za_pregled'] = False
+
+                    # Clear the staging area after saving changes
+                    st.session_state["staging_changes"] = {}
+                    st.success("Vse spremembe so shranjene.")
+
         else:
             st.warning("Najprej naloži in preglej podatke.")
 
@@ -535,50 +563,35 @@ elif selected_tab == "tab5":
             
         if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'done2_state' in st.session_state and st.session_state['done2_state']==True:
             
+            if  'selected_words' in st.session_state:
+                selected_words = validate_words(st.session_state['selected_words'])
+                if selected_words:
+                    not_in_any = [word for word in selected_words if word not in st.session_state['usecase']["mergers"] and word not in st.session_state['usecase']["renamers"] and word not in st.session_state['usecase']["identificators"]]
+                    if not_in_any:
+                        st.write("Besede, ki niso v pravilih združevanja, preimenovanja ali identifikatorjih:")
+                        for word in not_in_any:
+                            col1, col2, col3, col4, col5, col6 = st.columns(6)
+                            with col2:
+                                st.write(word)
+                            with col3:
+                                if st.button(f"Dodaj v združevanje", key=f"add_merger_{word}"):
+                                    st.session_state['usecase']["mergers"][word] = word
+                                    st.rerun()
+                            with col4:
+                                if st.button(f"Dodaj v preimenovanje", key=f"add_renamer_{word}"):
+                                    st.session_state['usecase']["renamers"][word] = word
+                                    st.rerun()
+                            with col5:
+                                if st.button(f"Dodaj v identifikatorje", key=f"add_identifier_{word}"):
 
-
-            st.write("Pregled izbrani besed v pravilih združevanja, preimenovanja in identifikatorjev:")
-
-            if ('presence_data' in st.session_state or 'selected_words' in st.session_state):
-                if 'presence_data' in st.session_state:
-                    presence_data = st.session_state['presence_data']
-                    # log_message("tab5 presence data from session")
-                elif 'selected_words' in st.session_state:
-                    selected_words = validate_words(st.session_state['selected_words'])
-                    if selected_words:
-                        # log_message("tab5 presence data from selected_words")
-                        presence_data = {
-                            "Beseda": [],
-                            "V združevanju": [],
-                            "V preimenovanju": [],
-                            "V identifikatorjih": []
-                        }
-
-                        for word in selected_words:
-                            presence_data["Beseda"].append(word)
-                            presence_data["V združevanju"].append(word in st.session_state['usecase']["mergers"])
-                            presence_data["V preimenovanju"].append(word in st.session_state['usecase']["renamers"])
-                            presence_data["V identifikatorjih"].append(word in st.session_state['usecase']["identificators"])
-
-                presence_df = pd.DataFrame(presence_data)
-
-                left_col, right_col = st.columns([5, 1])  
-                with left_col:
-                    edited_presence_df = st.data_editor(
-                        presence_df,
-                        num_rows="dynamic", 
-                        use_container_width=True
-                    )
-                with right_col:
-                    if st.button("Shrani spremembe", key="save_presence"):
-                        # log_message("tab5 save_presence button clicked")
-                        st.session_state['presence_data'] = edited_presence_df
-            else:
-                st.warning("Najprej vnesite seznam besed za klasifikacijo.")
-
+                                    st.session_state['usecase']["identificators"][word] = str(max(int(value) for value in st.session_state['usecase']["identificators"].values()) + 1)
+                                    st.rerun()
 
             st.subheader("Pravila za združevanje rezultatov:")
-            merge_switcher = st.session_state['usecase']["mergers"]   
+            if 'merge_edited_switcher' in st.session_state and 'processed_dfs':
+                merge_switcher = st.session_state['merge_edited_switcher']
+            else:
+                merge_switcher = st.session_state['usecase']["mergers"]   
             merger_df = pd.DataFrame(list(merge_switcher.items()), columns=["Iz besede", "V besedo"])
             
             left_col, right_col = st.columns([5, 1])  
@@ -596,10 +609,13 @@ elif selected_tab == "tab5":
 
 
             st.subheader("Pravila za preimenovanje rezultatov:")
-            rename_switcher = st.session_state['usecase']["renamers"]
-            # Pretvorimo slovar v DataFrame za urejanje
+            if 'rename_edited_switcher' in st.session_state and 'processed_dfs':
+                rename_switcher = st.session_state['rename_edited_switcher']
+            else:
+                rename_switcher = st.session_state['usecase']["renamers"]             
             renamer_df = pd.DataFrame(list(rename_switcher.items()), columns=["Izvirno ime", "Novo ime"])
-            
+            log_message("tab5 edited rename_edited_switcher")
+
             left_col, right_col = st.columns([5, 1])  
             with left_col:       
                 edited_renamer_renamer_df = st.data_editor(
@@ -615,9 +631,11 @@ elif selected_tab == "tab5":
 
 
             st.subheader("Identifikatorji:")
+            if 'edited_identifiers' in st.session_state :
+                default_identifiers = st.session_state['edited_identifiers']
+            else:
+                default_identifiers = st.session_state['usecase']["identificators"]   
 
-            default_identifiers = st.session_state['usecase']["identificators"]    
-            # Pretvorimo slovar v DataFrame za urejanje
             identifier_df = pd.DataFrame(list(default_identifiers.items()), columns=["Ime", "Identifikator"])
             
             left_col, right_col = st.columns([5, 1])  
@@ -633,7 +651,7 @@ elif selected_tab == "tab5":
                     edited_identifiers = dict(zip(edited_identifier_df["Ime"], edited_identifier_df["Identifikator"]))  
                     st.session_state['edited_identifiers'] = edited_identifiers   
 
-            log_message("tab5 edited_identifiers")
+            
             
         else:
             st.warning("Najprej naloži in preglej podatke.")    
@@ -643,7 +661,7 @@ elif selected_tab == "tab6":
     with cols[1]:    
         st.header("6. Pregled rezultatov")
         
-        if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state  and 'done2_state' in st.session_state and st.session_state['done2_state']==True and 'merge_edited_switcher' in st.session_state and 'edited_identifiers' in st.session_state:
+        if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state  and 'done2_state' in st.session_state and st.session_state['done2_state']==True:
             # Privzeti slovar za identifikatorje
 
 
@@ -729,8 +747,7 @@ elif selected_tab == "tab7":
             st.dataframe(final_df)  
 
 
-            # Prenesi končno datoteko
-            csv = final_df.to_csv(index=False).encode('utf-8')
+            csv = final_df.to_csv(index=False, sep=';').encode('utf-8')
             st.download_button(
                 label="Prenesi končni CSV",
                 data=csv,
