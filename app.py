@@ -118,9 +118,12 @@ if selected_tab == "tab1":
                     "bob": "5",
                     "hot": "6",
                     "re:do": "7",
+                    "drugo": "98",
+                    "ne vem": "99",
+                    "neznano": "100",
                 },
                 "columns": "Q1a_1_other,Q1a_2_other,Q1a_3_other,Q1a_4_other,Q1a_5_other,Q1a_6_other,Q1a_7_other,Q1a_8_other,Q1a_9_other,Q1a_10_other",
-                "recomenders":  "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, amis, apple, ario, debitel, hot telekom, hofer telekom, t-2, mobitel, izi, spar, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do"
+                "recomenders":  "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, amis, apple, ario, debitel, hot telekom, hofer telekom, t-2, mobitel, izi, spar, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do, drugo, ne vem, neznano"
             },
             "fiksni ponudniki": {
                 "mergers": {
@@ -164,10 +167,12 @@ if selected_tab == "tab1":
                     "telemach": "3",
                     "t2": "4",
                     "total tv": "5",
-                    "drugo": "6",
+                    "drugo": "98",
+                    "ne vem": "99",
+                    "neznano": "100",                 
                 },
                 "columns": "Q1b_1_other,Q1b_2_other,Q1b_3_other,Q1b_4_other,Q1b_4_other,Q1b_6_other,Q1b_7_other,Q1b_8_other,Q1b_9_other",
-                "recomenders":  "a1, a1 slovenija, amis, ario, bob, hot, hofer, hofer telekom, hofer hot, mobitel, neo, eon, netflix, radio in televizija slovenije, telstra, siol, samsung, sanmix, simobil, svislar, t2, t1, telekom, telekom slovenije, telemach, tvspored, totaltv, voyo"
+                "recomenders":  "a1, a1 slovenija, amis, ario, bob, hot, hofer, hofer telekom, hofer hot, mobitel, neo, eon, netflix, radio in televizija slovenije, telstra, siol, samsung, sanmix, simobil, svislar, t2, t1, telekom, telekom slovenije, telemach, tvspored, totaltv, voyo, drugo, ne vem, neznano"
             },        
             "banke": {
                 "mergers": {
@@ -224,10 +229,12 @@ if selected_tab == "tab1":
                     "skb": "12",
                     "sparkasse": "13",
                     "unicredit bank": "14",
-                    "drugo": "15"
+                    "drugo": "98",
+                    "ne vem": "99",
+                    "neznano": "100",                       
                 },
                 "columns": "v1_1_other, v1_2_other, v1_3_other, v1_4_other, v1_5_other, v1_6_other, v1_7_other, v1_8_other, v1_9_other, v1_10_other, v1_11_other",
-                "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank"
+                "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank, drugo, ne vem, neznano"
             },
             "vode": {
                 "mergers": {
@@ -272,9 +279,12 @@ if selected_tab == "tab1":
                     "saguaro (lidl)": "11",
                     "cana royal water": "12",
                     "primaqua": "13",
+                    "drugo": "98",
+                    "ne vem": "99",
+                    "neznano": "100",                   
                 },
                 "columns": "S1_1_other, S1_2_other, S1_3_other, S1_4_other, S1_5_other, S1_6_other, S1_7_other, S1_8_other, S1_9_other, S1_10_other",
-                "recomenders": "bistra, coca cola, cockta, corona, costela, dana, dm, donat, donatmg, edina, eurospin, evian, fanta, fiji, fruc, fructal, gaia, hofer, jamnica, jana, jamniška kiselica, kiseljak, lidl, lipiki studenac, lisa, mercator, mercator voda, mg mivela, natura, oaza, oda, ora, perrier, pivo, prima, primaqua, primula, qelle, radenska, rauch, redbull, roemerquelle, rogaška, rogaška slatina, scweps, saguaro, sanpellegrino, sanbenedetto, sarajevski vrelec, sarajevski kiseljak, segura, smart, spar, sparvoda, sprite, studenac, svetina, tempel, tonic, trisrca, tus, tuzlanski kiseljak, tu, tuvoda, voss, zala, cedevita, ferarelle, guizza, izvir, knjaz miloš, monin, trgovinske znamke, šveps",
+                "recomenders": "bistra, coca cola, cockta, corona, costela, dana, dm, donat, donatmg, edina, eurospin, evian, fanta, fiji, fruc, fructal, gaia, hofer, jamnica, jana, jamniška kiselica, kiseljak, lidl, lipiki studenac, lisa, mercator, mercator voda, mg mivela, natura, oaza, oda, ora, perrier, pivo, prima, primaqua, primula, qelle, radenska, rauch, redbull, roemerquelle, rogaška, rogaška slatina, scweps, saguaro, sanpellegrino, sanbenedetto, sarajevski vrelec, sarajevski kiseljak, segura, smart, spar, sparvoda, sprite, studenac, svetina, tempel, tonic, trisrca, tus, tuzlanski kiseljak, tu, tuvoda, voss, zala, cedevita, ferarelle, guizza, izvir, knjaz miloš, monin, trgovinske znamke, šveps, drugo, ne vem, neznano",
             },
         }
 
@@ -306,7 +316,7 @@ elif selected_tab == "tab2":
                 st.write("Če želite ponovno vnesti podatke osvežite stran.")
             else:
             
-                st.write("Naloži CSV datoteko in vnesi ime stolpca.")
+                st.write("Naloži CSV datoteko in izberi stolpce.")
                 # File uploader
                 uploaded_file = st.file_uploader("Naloži CSV", type="csv")
 
@@ -314,7 +324,7 @@ elif selected_tab == "tab2":
                 processed_dfs = []
                 word_input = None
 
-                if uploaded_file and column_name:
+                if uploaded_file:
                     
                     have_delimiter = False
                     try:
@@ -335,47 +345,48 @@ elif selected_tab == "tab2":
                             st.session_state['initial_df'] = df
                             unique_words_set = set()  # Use a set to collect unique words
 
-
+                            preselected = [col.strip() for col in st.session_state['usecase']["columns"].split(',')]
 
                             # Input for column name
-                            column_name = st.text_input(
-                                "Vnesite ime stolpca ločeno z vejico:",
-                                value=st.session_state['usecase']["columns"],
-                                placeholder="npr." + st.session_state['usecase']["columns"]
-                            )                            
+                            selected_columns = st.multiselect(
+                                "Izberite stolpce za obdelavo:",
+                                options=df.columns.tolist(),
+                                default=[col for col in preselected if col in df.columns]
+                            )
+                            if len(selected_columns) > 0:
+                                column_name = ','.join(selected_columns)
+                                column_names = [col.strip() for col in column_name.split(',')]
+                                for col in column_names:
+                                    if col in df.columns:
+                                        recognised_column_names.append(col)
+                                        unique_words = df[col].dropna().unique()
+                                        # Strip words, filter out empty strings, and add unique words to the set
+                                        unique_words_set.update([word.strip() for word in unique_words if str(word).strip()])
+                                    else:
+                                        st.error(f"Stolpec '{col}' ni najden v naloženi CSV datoteki.")
 
-                            column_names = [col.strip() for col in column_name.split(',')]
-                            for col in column_names:
-                                if col in df.columns:
-                                    recognised_column_names.append(col)
-                                    unique_words = df[col].dropna().unique()
-                                    # Strip words, filter out empty strings, and add unique words to the set
-                                    unique_words_set.update([word.strip() for word in unique_words if str(word).strip()])
-                                else:
-                                    st.error(f"Stolpec '{col}' ni najden v naloženi CSV datoteki.")
+                                # Convert the unique set back to a sorted string for display
+                                unique_words_text = ", ".join(sorted(unique_words_set))
 
-                            # Convert the unique set back to a sorted string for display
-                            unique_words_text = ", ".join(sorted(unique_words_set))
-
-                            # Display the unique words
-                            st.write("Unikatne besede:")
-                            st.text_area(
-                                "Unikatne besede v stolpcih (kopirajte, če je potrebno):",
-                                value=unique_words_text,
-                                height=150,
-                                label_visibility="collapsed"
-                            )   
-                            if len(recognised_column_names) > 0:
-                                recommended_words = st.session_state['usecase']["recomenders"]
-                                st.write("Priporočen seznam besed:")
+                                # Display the unique words
+                                st.write("Unikatne besede:")
                                 st.text_area(
-                                    "Priporočene besede:",
-                                    value=recommended_words,
+                                    "Unikatne besede v stolpcih (kopirajte, če je potrebno):",
+                                    value=unique_words_text,
                                     height=150,
                                     label_visibility="collapsed"
-                                )
-                            else:
-                                st.error(f"Stolpeci ne obstajajo v naloženi CSV datoteki.")
+                                )   
+                                if len(recognised_column_names) > 0:
+                                    recommended_words = st.session_state['usecase']["recomenders"]
+                                    st.write("Priporočen seznam besed:")
+                                    st.text_area(
+                                        "Priporočene besede:",
+                                        value=recommended_words,
+                                        height=150,
+                                        label_visibility="collapsed"
+                                    )
+                                else:
+                                    st.error(f"Stolpeci ne obstajajo v naloženi CSV datoteki.")
                         except pd.errors.EmptyDataError:
                             st.error("CSV datoteka je prazna ali ima napačno obliko.")
                         except csv.Error:
@@ -387,7 +398,7 @@ elif selected_tab == "tab2":
                     st.subheader("Seznam besed za klasifikacijo:")
                     word_input = st.text_area(
                         "Vpiši seznam besed, ločenih z vejicami, za klasifikacijo:",
-                        value=recommended_words,
+                        # value=recommended_words,
                         placeholder="npr., telemach, telekom, a1, izi, hot"
                     )
                     
@@ -465,12 +476,13 @@ elif selected_tab == "tab3":
                     with col4:
                         st.write("Označi kot pregledano")
                     for index, row in df_to_review.iterrows():
+                        col1, col2, col3, col4 = st.columns(4)
                         with col1:
-                            row[st.session_state['recognised_column_names'][selected_index]]
+                            st.write(row[st.session_state['recognised_column_names'][selected_index]])
                         with col2:
-                            row['najboljse_ujemanje']
+                            st.write(row['najboljse_ujemanje'])
                         with col3:
-                            row['razmerje']
+                            st.write(row['razmerje'])
                         with col4:
                             if st.button(f"Označi kot pregledano", key=f"mark_reviewed_{selected_index}_{index}"):
                                 st.session_state['processed_dfs'][selected_index].at[index, 'za_pregled'] = False
@@ -512,7 +524,7 @@ elif selected_tab == "tab4":
                         st.write(f"Besede za pregled v stolpcu '{column_name}':")
 
                         # Dropdown options for manual classification
-                        dropdown_options = ["neznano"] + st.session_state['words']
+                        dropdown_options = st.session_state['words']
 
                         # Prepare a staging area for changes specific to the current dataframe
                         if df_index not in st.session_state["staging_changes"]:
@@ -584,7 +596,8 @@ elif selected_tab == "tab5":
                             with col5:
                                 if st.button(f"Dodaj v identifikatorje", key=f"add_identifier_{word}"):
 
-                                    st.session_state['usecase']["identificators"][word] = str(max(int(value) for value in st.session_state['usecase']["identificators"].values()) + 1)
+                                    valid_identifiers = {k: v for k, v in st.session_state['usecase']["identificators"].items() if k not in ["drugo", "ne vem", "neznano"]}
+                                    st.session_state['usecase']["identificators"][word] = str(max(int(value) for value in valid_identifiers.values()) + 1)
                                     st.rerun()
 
             st.subheader("Pravila za združevanje rezultatov:")
@@ -642,15 +655,14 @@ elif selected_tab == "tab5":
             with left_col: 
                 edited_identifier_df = st.data_editor(
                     identifier_df,
-                    num_rows="dynamic",  # Uporabniki lahko dodajo nove vrstice
-                    use_container_width=True
+                    num_rows="dynamic",  
+                    use_container_width=True,
                 )
                 
             with right_col:
                 if st.button("Shrani spremembe", key="save_identifiers"):   
                     edited_identifiers = dict(zip(edited_identifier_df["Ime"], edited_identifier_df["Identifikator"]))  
                     st.session_state['edited_identifiers'] = edited_identifiers   
-
             
             
         else:
@@ -662,13 +674,24 @@ elif selected_tab == "tab6":
         st.header("6. Pregled rezultatov")
         
         if 'usecase' in st.session_state and 'processed_dfs' in st.session_state and 'recognised_column_names' in st.session_state  and 'done2_state' in st.session_state and st.session_state['done2_state']==True:
-            # Privzeti slovar za identifikatorje
+
+            if 'merge_edited_switcher' in st.session_state and 'processed_dfs':
+                merge_edited_switcher = st.session_state['merge_edited_switcher']
+            else:
+                merge_edited_switcher = st.session_state['usecase']["mergers"]   
+
+            if 'rename_edited_switcher' in st.session_state and 'processed_dfs':
+                rename_edited_switcher = st.session_state['rename_edited_switcher']
+            else:
+                rename_edited_switcher = st.session_state['usecase']["renamers"]      
+
+            if 'edited_identifiers' in st.session_state :
+                edited_identifiers = st.session_state['edited_identifiers']
+            else:
+                edited_identifiers = st.session_state['usecase']["identificators"]  
 
 
-            merge_edited_switcher = st.session_state['merge_edited_switcher']
-            rename_edited_switcher = st.session_state['rename_edited_switcher']
-            edited_identifiers = st.session_state['edited_identifiers']
-            # Funkcija za preimenovanje z uporabniškim slovarjem
+   
             def zdruzi_best_match(name):
                 if name is None or pd.isna(name):
                     return name  # Če je vrednost None ali NaN, jo pustimo nespremenjeno
@@ -681,7 +704,7 @@ elif selected_tab == "tab6":
             
         # Funkcija za pridobitev identifikatorja
             def get_identifier(name):
-                max_identifier = max(int(value) for value in edited_identifiers.values()) + 1
+                max_identifier = max(int(value) for value in edited_identifiers.values())
                 if name is None or pd.isna(name):
                     return None  
                 return edited_identifiers.get(name.lower(), max_identifier)        
