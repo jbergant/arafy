@@ -109,29 +109,6 @@ use_cases:
       t1: t2
       tvspored: drugo
       voyo: drugo
-  kukulele:
-    columns: S1_1_other,S1_2_other,S1_3_other,S1_4_other,S1_5_other,S1_6_other,S1_7_other,S1_8_other,S1_9_other,S1_10_other
-    identificators:
-      drugo: '98'
-      monin: '1'
-      ne vem: '99'
-      neznano: '100'
-    mergers:
-      sarajevskivrelec: sarajevskivrelec
-      špar: špar
-      šveps: šveps
-    recomenders: abc, aqua, babylove, bistra, blues, cocacola, cockta, corona, costela,
-      costello, dana, dm, dinat, donat, donatmg, edina, eurospin, evian, fanta, fiji,
-      fruc, fructal, gaia, hofer, jamnica, jana, jamnikakiselica, kiseljak, lidl,
-      lipičkistudenac, lisa, mercator, mercatorvoda, mgmivela, natura, našenampašelidl,
-      oaza, oda, ora, perier, pivo, prima, primaqua, primula, qelle, radenska, rauch,
-      redbull, roemerquelle, rogaška, rogaškaslatina, romaquelle, romencele, rommelquelle,
-      rmrquele, scweps, saguaro, sanpellegrino, sanbenedetto, sarajevskivrelec, sarajevskikiseljak,
-      segura, smart, spar, sparvoda, sprite, studena, svetina, tempel, templj, tonic,
-      trisrca, tus, tuzlanskikiseljak, tuš, tušvoda, voss, zala, cedevita, ferarelle,
-      guizza, izvir, knjazmiloš, monin, trgovinskeznamke, špar, šveps
-    renamers:
-      trgovinskeznamke: trgovinskeznamke
   mobilni ponudniki:
     columns: Q1a_1_other,Q1a_2_other,Q1a_3_other,Q1a_4_other,Q1a_5_other,Q1a_6_other,Q1a_7_other,Q1a_8_other,Q1a_9_other,Q1a_10_other
     identificators:
