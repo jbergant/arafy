@@ -5,10 +5,14 @@ import csv
 import copy
 import logging
 import extra_streamlit_components as stx
-
+import yaml
 
 
 logging.basicConfig(level=logging.INFO)
+
+
+if 'similarity_threshold' not in st.session_state:
+    st.session_state['similarity_threshold'] = 0.7
 
 # Function to log messages
 def log_message(message):
@@ -41,7 +45,7 @@ def process_csv(df, column, words):
                 highest_similarity = similarity
                 best_match = name
 
-        if highest_similarity > 0.7:
+        if highest_similarity > st.session_state['similarity_threshold']:
             return best_match, highest_similarity, False
         else:
             return best_match, highest_similarity, True
@@ -67,9 +71,10 @@ tabs = [
 # Create the TabBar with the first tab selected by default
 selected_tab = stx.tab_bar(data=tabs, default="tab1")
 
+def load_config(file_path="use_cases.yaml"):
+    with open(file_path, "r") as file:
+        return yaml.safe_load(file)
 
-if 'similarity_threshold' not in st.session_state:
-    st.session_state['similarity_threshold'] = 0.7
 
 cols = st.columns([2, 8, 2])  # Create three columns, the middle one takes most space
 
@@ -77,234 +82,25 @@ cols = st.columns([2, 8, 2])  # Create three columns, the middle one takes most 
 if selected_tab == "tab1":
     with cols[1]:
         st.header("1. Nastavitve")
-        use_cases = {
-            "mobilni ponudniki": {
-                "mergers": {
-                    "a1 slovenija": "a1",
-                    "simobil": "a1",
-                    "izi mobil": "a1",
-                    "izimobil": "a1",
-                    "hofer": "hot",
-                    "hot mobil": "hot",
-                    "hot telekom": "hot",
-                    "hofer telekom": "hot",
-                    "telekom slovenije": "telekom",
-                    "mobitel": "telekom",
-                    "t-2": "t2",
-                    "re do": "re:do",
-                    "ario": "drugo",
-                    "apple": "drugo",
-                    "debitel": "drugo"
-                },
-                "renamers": {
-                    "mobitel": "telekom",
-                    "siol": "telekom",
-                    "simobil": "a1",
-                    "izi": "a1",
-                    "tuš mobil": "telemach",
-                    "tuš": "telemach",
-                    "spar mobil": "drugo",
-                    "spar": "drugo",
-                    "amis": "telemach",
-                    "debitel": "drugo",
-                    "ario": "drugo",
-                    "apple": "drugo"
-                },
-                "identificators": {
-                    "telekom": "1",
-                    "a1": "2",
-                    "telemach": "3",
-                    "t2": "4",
-                    "bob": "5",
-                    "hot": "6",
-                    "re:do": "7",
-                    "drugo": "98",
-                    "ne vem": "99",
-                    "neznano": "100",
-                },
-                "columns": "Q1a_1_other,Q1a_2_other,Q1a_3_other,Q1a_4_other,Q1a_5_other,Q1a_6_other,Q1a_7_other,Q1a_8_other,Q1a_9_other,Q1a_10_other",
-                "recomenders":  "telemach, telekom, a1, a1 slovenija, izimobil, t2, hofer, simobil, hot, bob, amis, apple, ario, debitel, hot telekom, hofer telekom, t-2, mobitel, izi, spar, spar mobil, telekom slovenije, izi mobil, tuš mobil, tuš, re do, hot mobil, siol, re:do, drugo, ne vem, neznano"
-            },
-            "fiksni ponudniki": {
-                "mergers": {
-                    "a1 slovenija": "a1",
-                    "a2": "a1",
-                    "hofer": "hot",
-                    "hot mobil": "hot",
-                    "hot telekom": "hot",
-                    "hofer telekom": "hot",
-                    "hofer hot": "hot",
-                    "telekom slovenije": "telekom",
-                    "siol": "telekom",
-                    "neo": "telekom",
-                    "t-2": "t2",
-                    "t1": "t2",
-                    "radio in televizija slovenije": "telekom",
-                    "totaltv": "total tv"
-                },
-                "renamers": {
-                    "simobil": "a1",
-                    "izi mobil": "a1",                
-                    "mobitel": "telekom",
-                    "siol": "telekom",
-                    "izi mobil": "a1",
-                    "amis": "a1",
-                    "neo": "telekom",
-                    "eon": "telemach",
-                    "ario": "telemach",
-                    "svislar": "telemach",
-                    "t1": "t2",
-                    "radio in televizija slovenije": "telekom",
-                    "netflix": "drugo",
-                    "samsung": "drugo",
-                    "sanmix": "drugo",
-                    "tvspored": "drugo",
-                    "voyo": "drugo"
-                },
-                "identificators": {
-                    "telekom": "1",
-                    "a1": "2",
-                    "telemach": "3",
-                    "t2": "4",
-                    "total tv": "5",
-                    "drugo": "98",
-                    "ne vem": "99",
-                    "neznano": "100",                 
-                },
-                "columns": "Q1b_1_other,Q1b_2_other,Q1b_3_other,Q1b_4_other,Q1b_4_other,Q1b_6_other,Q1b_7_other,Q1b_8_other,Q1b_9_other",
-                "recomenders":  "a1, a1 slovenija, amis, ario, bob, hot, hofer, hofer telekom, hofer hot, mobitel, neo, eon, netflix, radio in televizija slovenije, telstra, siol, samsung, sanmix, simobil, svislar, t2, t1, telekom, telekom slovenije, telemach, tvspored, totaltv, voyo, drugo, ne vem, neznano"
-            },        
-            "banke": {
-                "mergers": {
-                    "nova ljubljanska banka": "nlb",
-                    "addiko": "addiko bank",
-                    "addico bank": "addiko bank",
-                    "bks": "bks bank",
-                    "banka sparkasse": "sparkasse",
-                    "dbs": "deželna banka slovenije",
-                    "derma banka": "deželna banka slovenije",
-                    "lon": "hranilnica lon",
-                    "ispb": "intesa sanpaolo bank",
-                    "intesa sanpaolo": "intesa sanpaolo bank",
-                    "intesa": "intesa sanpaolo bank",
-                    "nova kbm": "intesa sanpaolo bank",
-                    "nkbm": "nova kbm (abanka)",
-                    "nova kbm": "nova kbm (abanka)",
-                    "nova kreditna banka maribor": "nova kbm (abanka)",
-                    "nova kbm maribor": "nova kbm (abanka)",
-                    "phv": "primorska hranilnica vipava",
-                    "unicredit": "unicredit bank",
-                    "unicreditbank": "unicredit bank",
-                    "unicredit banka slovenija": "unicredit bank",
-                    "ucb": "unicredit bank",
-                    "gorenjska": "gorenjska banka",
-                    "dh": "delavska hranilnica",
-                    "skb": "skb",
-                    "skbbanka": "skb",
-                    "skbnkbm": "skb",
-                    "banka celje": "nova kbm (abanka)",
-                    "hranilnica vipava": "primorska hranilnica vipava",
-                    "primorska": "primorska hranilnica vipava"
-                },
-                "renamers": {
-                    "sberbank": "n banka",
-                    "grawe": "nova kbm (abanka)",
-                    "otpbank": "nova kbm (abanka)",
-                    "otp": "nova kbm (abanka)",
-                    "ljubljanska banka": "nlb",
-                    "hippo": "nova kbm (abanka)"
-                },
-                "identificators": {
-                    "nlb": "1",
-                    "addiko bank": "2",
-                    "bks bank": "3",
-                    "delavska hranilnica": "4",
-                    "deželna banka slovenije": "5",
-                    "gorenjska banka": "6",
-                    "hranilnica lon": "7",
-                    "intesa sanpaolo bank": "8",
-                    "nova kbm (abanka)": "9",
-                    "primorska hranilnica vipava": "10",
-                    "n banka": "11",
-                    "skb": "12",
-                    "sparkasse": "13",
-                    "unicredit bank": "14",
-                    "drugo": "98",
-                    "ne vem": "99",
-                    "neznano": "100",                       
-                },
-                "columns": "v1_1_other, v1_2_other, v1_3_other, v1_4_other, v1_5_other, v1_6_other, v1_7_other, v1_8_other, v1_9_other, v1_10_other, v1_11_other",
-                "recomenders": "addiko, addico bank, bks, bks bank, banka sparkasse, dbs, dh, delavska hranilnica, gorenjska, gorenjska banka, grawe, hippo, hranilnica lon, ispb, intesa, intesa sanpaolo, lon, ljubljanska banka, nkbm, nlb, nova kbm, nova kreditna banka maribor, otp, otpbank, phv, primorska hranilnica vipava, skb, skbbanka, skbnkbm, sparkasse, ucb, unicredit, unicredit banka slovenija, unicreditbank, banka celje, hranilnica vipava, primorska, sberbank, drugo, ne vem, neznano"
-            },
-            "vode": {
-                "mergers": {
-                    "radenska": "radenska gazirana",
-                    "radenska gazirana voda": "radenska gazirana",
-                    "radenska blaga gazirana voda": "radenska blago gazirana",
-                    "jamniška kiselica": "jamnica",
-                    "kiseljak": "sarajevski kiseljak",
-                    "mg mivela": "mivela mg",
-                    "lisa": "lissa (hofer)",
-                    "hofer": "lissa (hofer)",
-                    "saguaro": "saguaro (lidl)",
-                    "naše nam paše lidl": "saguaro (lidl)",
-                    "romaquelle": "römmerquelle",
-                    "rmrquele": "römmerquelle",
-                    "templj": "tempel",
-                    "tuzlanski kiseljak": "sarajevski kiseljak",
-                    "sarajevski vrelec": "sarajevski kiseljak"
-                },
-                "renamers": {
-                    "donatmg": "donat",
-                    "jana": "jamnica",
-                    "lipiki studenac": "jamnica",
-                    "prima": "primaqua",
-                    "tu": "drugo",
-                    "tuvoda": "drugo",
-                    "edina": "drugo",
-                    "mercator voda": "drugo",
-                    "trgovinske znamke": "drugo"
-                },
-                "identificators": {
-                    "radenska gazirana": "1",
-                    "radenska blago gazirana": "2",
-                    "jamnica": "3",
-                    "tempel": "4",
-                    "dana": "5",
-                    "mivela mg": "6",
-                    "donat": "7",
-                    "römmerquelle": "8",
-                    "sarajevski kiseljak": "9",
-                    "lissa (hofer)": "10",
-                    "saguaro (lidl)": "11",
-                    "cana royal water": "12",
-                    "primaqua": "13",
-                    "drugo": "98",
-                    "ne vem": "99",
-                    "neznano": "100",                   
-                },
-                "columns": "S1_1_other, S1_2_other, S1_3_other, S1_4_other, S1_5_other, S1_6_other, S1_7_other, S1_8_other, S1_9_other, S1_10_other",
-                "recomenders": "bistra, coca cola, cockta, corona, costela, dana, dm, donat, donatmg, edina, eurospin, evian, fanta, fiji, fruc, fructal, gaia, hofer, jamnica, jana, jamniška kiselica, kiseljak, lidl, lipiki studenac, lisa, mercator, mercator voda, mg mivela, natura, oaza, oda, ora, perrier, pivo, prima, primaqua, primula, qelle, radenska, rauch, redbull, roemerquelle, rogaška, rogaška slatina, scweps, saguaro, sanpellegrino, sanbenedetto, sarajevski vrelec, sarajevski kiseljak, segura, smart, spar, sparvoda, sprite, studenac, svetina, tempel, tonic, trisrca, tus, tuzlanski kiseljak, tu, tuvoda, voss, zala, cedevita, ferarelle, guizza, izvir, knjaz miloš, monin, trgovinske znamke, šveps, drugo, ne vem, neznano",
-            },
-        }
+        if 'processed_dfs' in st.session_state:
+            st.write("Če želite ponovno vnesti podatke osvežite stran.")
+        else:
+            config = load_config()
+            # Display a selectbox for the user to choose a use case
+            selected_use_case_name = st.selectbox("Izberi Use Case", list(config["use_cases"].keys()))
 
 
+            similarity_threshold = st.slider(
+                "Izberite prag podobnosti za ujemanje:",
+                min_value=0.1,
+                max_value=0.9,
+                value=st.session_state['similarity_threshold'],
+                step=0.1
+            )
+            st.session_state['similarity_threshold'] = similarity_threshold
 
-        # Display a selectbox for the user to choose a use case
-        selected_use_case_name = st.selectbox("Izberite primer uporabe:", list(use_cases.keys()))
-
-
-        similarity_threshold = st.slider(
-            "Izberite prag podobnosti za ujemanje:",
-            min_value=0.1,
-            max_value=0.9,
-            value=st.session_state['similarity_threshold'],
-            step=0.1
-        )
-        st.session_state['similarity_threshold'] = similarity_threshold
-
-        # Fetch the selected use case settings
-        st.session_state['usecase'] = use_cases[selected_use_case_name]
+            # Fetch the selected use case settings
+            st.session_state['usecase'] = config["use_cases"][selected_use_case_name]
 
 
 # Tab 2: Input Data
@@ -386,7 +182,7 @@ elif selected_tab == "tab2":
                                         label_visibility="collapsed"
                                     )
                                 else:
-                                    st.error(f"Stolpeci ne obstajajo v naloženi CSV datoteki.")
+                                    st.error(f"Stolpci ne obstajajo v naloženi CSV datoteki.")
                         except pd.errors.EmptyDataError:
                             st.error("CSV datoteka je prazna ali ima napačno obliko.")
                         except csv.Error:
