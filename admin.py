@@ -14,6 +14,14 @@ def save_config(data, file_path="use_cases.yaml"):
     with open(file_path, "w") as file:
         yaml.safe_dump(data, file, allow_unicode=True)
 
+def validate_words(input_string):
+    """Preveri, da je vnos seznam besed, ločenih z vejicami, ki dovoljuje posebne znake in številke."""
+    words = input_string.split(',')
+    if all(word.strip() for word in words):  # Preveri, da vsaka beseda ni prazna
+        return [word.strip() for word in words]
+    else:
+        return None        
+
 config = load_config()
 
 
@@ -32,11 +40,50 @@ if selected_tab == "tab1":
     use_case = st.selectbox("Izberi Use Case", list(config["use_cases"].keys()))
     if use_case:
         st.write(f"Urejam nastavitve za use case: **{use_case}**")
+
         current_config = config["use_cases"][use_case]
-        
+        if 'use_case_name' not in st.session_state or st.session_state['use_case_name']!=use_case:
+            st.session_state['current_config'] = current_config
+            st.session_state['use_case_name'] = use_case
+        # st.write(st.session_state['current_config'])
+        # st.write(st.session_state['current_config']["mergers"])
+        updated_recomenders = st.text_area(
+            "Priporočene vrednosti (ločene z vejico):", 
+            current_config["recomenders"]
+        )
+
+        selected_words = validate_words(current_config["recomenders"])
+
+        if selected_words:
+            not_in_any = [word for word in selected_words if word not in st.session_state['current_config']["mergers"] and word not in st.session_state['current_config']["renamers"] and word not in st.session_state['current_config']["identificators"]]
+            if not_in_any:
+                st.write("Besede, ki niso v pravilih združevanja, preimenovanja ali identifikatorjih:")
+                for word in not_in_any:
+                    col1, col2, col3, col4 = st.columns(4)
+                    with col1:
+                        st.write(word)
+                    with col2:
+                        if st.button(f"Dodaj v združevanje", key=f"add_merger_{word}"):
+                            st.session_state['current_config']["mergers"][word] = word
+                            st.rerun()
+                    with col3:
+                        if st.button(f"Dodaj v preimenovanje", key=f"add_renamer_{word}"):
+                            st.session_state['current_config']["renamers"][word] = word
+                            st.rerun()
+                    with col4:
+                        if st.button(f"Dodaj v identifikatorje", key=f"add_identifier_{word}"):
+
+                            valid_identifiers = {k: v for k, v in st.session_state['current_config']["identificators"].items() if k not in ["drugo", "ne vem", "neznano"]}
+                            if valid_identifiers:
+                                new_identifier = str(max(int(value) for value in valid_identifiers.values()) + 1)
+                            else:
+                                new_identifier = "1"
+                            st.session_state['current_config']["identificators"][word] = new_identifier
+                            st.rerun()   
+
         # Editable Sections
         updated_mergers_df = pd.DataFrame(
-            list(current_config["mergers"].items()), 
+            list(st.session_state['current_config']["mergers"].items()), 
             columns=["Izvirno ime", "Novo ime"]
         )
         st.subheader("Pravila za združevanje rezultatov:")
@@ -46,7 +93,7 @@ if selected_tab == "tab1":
             use_container_width=True,        
         )
         updated_renamers_df = pd.DataFrame(
-            list(current_config["renamers"].items()), 
+            list(st.session_state['current_config']["renamers"].items()), 
             columns=["Izvirno ime", "Novo ime"]
         )
         st.subheader("Pravila za preimenovanje rezultatov:")
@@ -56,7 +103,7 @@ if selected_tab == "tab1":
             use_container_width=True,        
         )
         updated_identificators_df = pd.DataFrame(
-            list(current_config["identificators"].items()), 
+            list(st.session_state['current_config']["identificators"].items()), 
             columns=["Ime", "Identifikator"]
         )
         st.subheader("Identificators:")
@@ -71,10 +118,7 @@ if selected_tab == "tab1":
             "Predvidena polja (ločene z vejico):", 
             current_config["columns"]
         )
-        updated_recomenders = st.text_area(
-            "Priporočene vrednosti (ločene z vejico):", 
-            current_config["recomenders"]
-        )
+     
         
         # Save Changes
         if st.button("Shrani spremembe"):
@@ -184,7 +228,6 @@ if selected_tab == "tab2":
                             height=150,
                             label_visibility="collapsed"
                         )
-
 
 
                         st.subheader("Pravila za združevanje rezultatov:")
