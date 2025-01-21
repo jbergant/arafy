@@ -20,6 +20,7 @@ config = load_config()
 tabs = [
     stx.TabBarItemData(id="tab1", title="1. Urejanje nastavitev", description=""),
     stx.TabBarItemData(id="tab2", title="2. Dodaj nov usecase", description=""),
+    stx.TabBarItemData(id="tab3", title="3. Izbriši usecase", description=""),
 ]
 
 # Create the TabBar with the first tab selected by default
@@ -248,4 +249,22 @@ if selected_tab == "tab2":
             except Exception as e:
                 st.error(f"Prišlo je do napake pri branju datoteke: {e}")
 
-
+if selected_tab == "tab3":
+    st.title("Izbriši use case")    
+    # Select the use case to delete
+    use_case_to_delete = st.selectbox("Izberi Use Case za izbris", list(config["use_cases"].keys()))
+    
+    if st.button("Izbriši izbrani use case"):
+        if use_case_to_delete:
+            try:
+                # Remove the selected use case from the configuration
+                del config["use_cases"][use_case_to_delete]
+                
+                # Save the updated configuration to the file
+                save_config(config)
+                
+                st.success(f"Use case '{use_case_to_delete}' uspešno izbrisan!")
+            except Exception as e:
+                st.error(f"Napaka pri brisanju use case-a: {e}")
+        else:
+            st.error("Izberi use case za izbris.")
