@@ -167,6 +167,20 @@ use_cases:
       spar mobil: drugo
       tuš: telemach
       tuš mobil: telemach
+  sdfsd:
+    columns: S1_1_other,S1_3_other,S1_6_other,S1_8_other
+    identificators:
+      drugo: '98'
+      ne vem: '99'
+      neznano: '100'
+    mergers: {}
+    recomenders: babylove, cedevita, costela, donat, dana, donat mg, evian, fanta,
+      fruc, hofer, janica, jana, kiseljak, kokakola, kola, lidl, lisa, mercator, mineralne,
+      oaza, oda, primaqua, qelle, radenska, rogaška, romel, romerqielle, sarajevski
+      kiseljak, sola, spar, tempel, union, vitamin well, voslauer, zala, jager voda,
+      mineralna voda tuš, naše nam paše, radenska classig, romerqualle, san pellegrino,
+      spar znamka, tuš
+    renamers: {}
   vode:
     columns: S1_1_other, S1_2_other, S1_3_other, S1_4_other, S1_5_other, S1_6_other,
       S1_7_other, S1_8_other, S1_9_other, S1_10_other

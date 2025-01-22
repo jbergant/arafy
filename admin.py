@@ -204,7 +204,7 @@ if selected_tab == "tab2":
                     if len(recognised_column_names) > 0:
         
                         def normalize(word):
-                            return re.sub(r"[^a-z0-9\sščž]", "", word.lower()).replace(" ", "")
+                            return re.sub(r"[^a-z0-9\sščž]", "", word.lower())
 
                         unique_words_list = [normalize(word.strip()) for word in unique_words_area.split(",")]
 
