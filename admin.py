@@ -84,7 +84,8 @@ if selected_tab == "tab1":
         # Editable Sections
         updated_mergers_df = pd.DataFrame(
             list(st.session_state['current_config']["mergers"].items()), 
-            columns=["Izvirno ime", "Novo ime"]
+            columns=["Izvirno ime", "Novo ime"],
+            key="updated_mergers_df"
         )
         st.subheader("Pravila za združevanje rezultatov:")
         updated_mergers = st.data_editor(
@@ -94,7 +95,8 @@ if selected_tab == "tab1":
         )
         updated_renamers_df = pd.DataFrame(
             list(st.session_state['current_config']["renamers"].items()), 
-            columns=["Izvirno ime", "Novo ime"]
+            columns=["Izvirno ime", "Novo ime"],
+            key="updated_renamers_df"
         )
         st.subheader("Pravila za preimenovanje rezultatov:")
         updated_renamers = st.data_editor(
@@ -104,7 +106,8 @@ if selected_tab == "tab1":
         )
         updated_identificators_df = pd.DataFrame(
             list(st.session_state['current_config']["identificators"].items()), 
-            columns=["Ime", "Identifikator"]
+            columns=["Ime", "Identifikator"],
+            key="updated_identificators_df"
         )
         st.subheader("Identificators:")
         updated_identificators = st.data_editor(

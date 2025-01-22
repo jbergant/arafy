@@ -109,6 +109,18 @@ use_cases:
       t1: t2
       tvspored: drugo
       voyo: drugo
+  foo:
+    columns: S4_4_other,S4_5_other,S7_5_other
+    identificators:
+      drugo: '98'
+      ne vem: '99'
+      neznano: '100'
+    mergers: {}
+    recomenders: invalidskopodjethe, navadendelavec, prodajablaga, racunovodskidelavec,
+      tiskar, vodjait, vodjakomercialneslužbe, vodjaskrbnikovblagovnihskupin, zavarovalnizastopnim,
+      cvetličar, markting, podružnicatujedružbe, pomočnikceo, poslovnisekretar, prodajalogistika,
+      referent, vodjaizmene, vodjaoddelka, zoo
+    renamers: {}
   mobilni ponudniki:
     columns: Q1a_1_other,Q1a_2_other,Q1a_3_other,Q1a_4_other,Q1a_5_other,Q1a_6_other,Q1a_7_other,Q1a_8_other,Q1a_9_other,Q1a_10_other
     identificators:
