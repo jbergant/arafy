@@ -85,35 +85,35 @@ if selected_tab == "tab1":
         updated_mergers_df = pd.DataFrame(
             list(st.session_state['current_config']["mergers"].items()), 
             columns=["Izvirno ime", "Novo ime"],
-            key="updated_mergers_df"
         )
         st.subheader("Pravila za združevanje rezultatov:")
         updated_mergers = st.data_editor(
             updated_mergers_df,
             num_rows="dynamic",  
-            use_container_width=True,        
+            use_container_width=True,  
+            key="updated_mergers"      
         )
         updated_renamers_df = pd.DataFrame(
             list(st.session_state['current_config']["renamers"].items()), 
-            columns=["Izvirno ime", "Novo ime"],
-            key="updated_renamers_df"
+            columns=["Izvirno ime", "Novo ime"]
         )
         st.subheader("Pravila za preimenovanje rezultatov:")
         updated_renamers = st.data_editor(
             updated_renamers_df,
             num_rows="dynamic",  
-            use_container_width=True,        
+            use_container_width=True, 
+            key="updated_renamers"       
         )
         updated_identificators_df = pd.DataFrame(
             list(st.session_state['current_config']["identificators"].items()), 
-            columns=["Ime", "Identifikator"],
-            key="updated_identificators_df"
+            columns=["Ime", "Identifikator"]
         )
         st.subheader("Identificators:")
         updated_identificators = st.data_editor(
             updated_identificators_df,
             num_rows="dynamic",  
-            use_container_width=True,        
+            use_container_width=True,    
+            key="updated_identificators"    
         )
 
 
